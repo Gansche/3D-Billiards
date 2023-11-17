@@ -6,9 +6,9 @@ set(CMAKE_CXX_STANDARD 17)
 project(Billiards)
 
 # set directories
-include_directories(${CMAKE_SOURCE_DIR}/include)
-link_directories(${CMAKE_SOURCE_DIR}/lib)
-aux_source_directory(${CMAKE_SOURCE_DIR}/src SRC)
+include_directories(include)
+link_directories(lib)
+aux_source_directory(src SRC)
 
 # set output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)

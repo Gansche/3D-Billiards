@@ -5,10 +5,22 @@
 #ifndef BILLIARDS_SHADER_H
 #define BILLIARDS_SHADER_H
 
-class Shader{
+#include <string>
+
+class Shader {
 public:
+    Shader(const char *vertexSource, const char *fragmentSource, const char *geometrySource = nullptr);
+
+    void compile();
+
+
+    ~Shader() = default;
 
 private:
+    unsigned int _shader_id;
+    const char *_vertexSource;
+    const char *_fragmentSource;
+    const char *_geometrySource;
 
 };
 
