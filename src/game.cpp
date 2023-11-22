@@ -8,7 +8,15 @@ Game::Game() {
 
 }
 
-void Game::initialize(){
+void Game::initialize() {
+
+}
+
+void Game::update() {
+
+}
+
+void Game::render() {
 
 }
 
