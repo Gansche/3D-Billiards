@@ -21,7 +21,7 @@ public:
     ~Game();
 
 private:
-    StateControler _state;
+    StateControler *_state;
     Scene *_scene;
 };
 

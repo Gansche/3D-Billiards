@@ -3,3 +3,11 @@
 //
 
 #include "table_manager.h"
+
+TableManager::TableManager() = default;
+
+void TableManager::render() {
+
+}
+
+TableManager::~TableManager() = default;

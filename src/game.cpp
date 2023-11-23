@@ -17,9 +17,10 @@ void Game::update() {
 }
 
 void Game::render() {
-
+    _scene->render();
 }
 
 Game::~Game() {
-
+    delete _state;
+    delete _scene;
 }

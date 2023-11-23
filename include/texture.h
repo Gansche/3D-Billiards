@@ -1,32 +1,33 @@
-// TODO: Unchecked
+// TODO: Unchecked: Not finished yet
 // Created by Brave Fang on 2023/11/15.
 //
 
 #ifndef BILLIARDS_TEXTURE_H
 #define BILLIARDS_TEXTURE_H
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-#include "stb_image.h"
+typedef struct TextureInformation {
+    int width;
+    int height;
+    int nrChannels;
+} TextureInfo;
 
 class Texture {
 public:
-    Texture() {
+    explicit Texture(const char *textureSource);
 
-    }
+    void generate();
 
-    void generate() {
-        glGenTextures(1, &_texture_id);
-    }
+    void bind() const;
 
-    void bind() {
-        glBindTexture(GL_TEXTURE_2D, _texture_id);
-    }
+    /* used to debug */
+    TextureInfo *getTextureInfo() { return _textureInfo; }
 
-    ~Texture() = default;
+    ~Texture();
 
 private:
     unsigned int _texture_id;
+    const char *_textureSource;
+    TextureInfo *_textureInfo;
 };
 
 #endif //BILLIARDS_TEXTURE_H
