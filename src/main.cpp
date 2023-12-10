@@ -1,7 +1,10 @@
 #include "canvas.h"
+#include "game.h"
 
 int main(int argc, char **argv) {
-    Canvas canvas;
-    canvas.initialize();
+    Game *billiards = new Game();
+
+    Canvas *canvas = new Canvas();
+    canvas->initialize(billiards);
     return 0;
 }

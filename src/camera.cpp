@@ -8,6 +8,9 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "defs.h"
 
+Camera *Camera::_current_camera = nullptr;
+std::list<Camera *> Camera::_active_cameras;
+
 Camera::Camera(glm::vec3 center, glm::vec3 world_up, glm::vec3 direction) {
     _center = center;
     _world_up = world_up;
@@ -16,10 +19,10 @@ Camera::Camera(glm::vec3 center, glm::vec3 world_up, glm::vec3 direction) {
     _up = glm::normalize(glm::cross(_horizontal, _direction));
 }
 
-glm::mat4 Camera::getLookAtMatrix() const {
-    return glm::lookAt(_center, _center + _direction, _up);
+void Camera::rotateCamera() {
+
 }
 
-void Camera::rotateCamera() {
+void Camera::updateViewMatrix() {
 
 }

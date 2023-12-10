@@ -4,29 +4,37 @@
 
 #ifndef BILLIARDS_CANVAS_H
 #define BILLIARDS_CANVAS_H
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <glm/glm.hpp>
 #include <iostream>
-#include "game.h"
+
+class Game;
 
 class Canvas {
 public:
-    Canvas();
+    Canvas() = default;
 
-    void initialize();
+    void initialize(Game* game);
 
-    ~Canvas();
+    ~Canvas() = default;
 
 private:
-    Game *_game;
+    static GLint _width;
+    static GLint _height;
+    static glm::mat4 _projection_matrix;
+    static Game *_game;
+    static double timeSinceLastFrame;
+    static double lastFrameTime;
 
-    static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+    static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
-    static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    static void window_size_callback(GLFWwindow *window, int newWidth, int newHeight);
 
-    static void mouse_callback(GLFWwindow* window, double xposIn, double yposIn);
+    static void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
 
-    static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
+    static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 };
 
 #endif //BILLIARDS_CANVAS_H

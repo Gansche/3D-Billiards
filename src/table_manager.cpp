@@ -3,8 +3,12 @@
 //
 
 #include "table_manager.h"
+#include "shader.h"
+#include "texture.h"
 
-TableManager::TableManager() = default;
+TableManager::TableManager() {
+
+}
 
 void TableManager::render() {
 

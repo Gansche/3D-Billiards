@@ -5,8 +5,9 @@
 #ifndef BILLIARDS_GAME_H
 #define BILLIARDS_GAME_H
 
-#include "state_controler.h"
-#include "scene.h"
+//class StateControler;
+
+class Scene;
 
 class Game {
 public:
@@ -18,10 +19,16 @@ public:
 
     void render();
 
+    void processKeyEvent(int key, int scancode, int action, int mode);
+
+    void processMouseEvent(double xposIn, double yposIn);
+
+    void processScrollEvent(double xoffset, double yoffset);
+
     ~Game();
 
 private:
-    StateControler *_state;
+//    StateControler *_state;
     Scene *_scene;
 };
 

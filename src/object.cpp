@@ -5,25 +5,17 @@
 #include "object.h"
 #include "shader.h"
 #include "texture.h"
+#include "defs.h"
 
 /* object */
 Object::Object() {
-    _shader = nullptr;
-    _texture = nullptr;
+
+}
+
+Object::Object(glm::vec3 position, glm::vec3 direction) {
+
 }
 
 Object::~Object() {
-    delete _shader;
-    delete _texture;
-}
-
-/* sphere */
-Sphere::Sphere(glm::vec3 center) {
-    _center = center;
-}
-
-void Sphere::render() {
 
 }
-
-Sphere::~Sphere() = default;

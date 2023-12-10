@@ -6,10 +6,13 @@
 #define BILLIARDS_SCENE_H
 
 #include <vector>
+#include "object.h"
 
 class Camera;
 
 class Light;
+
+class Mesh;
 
 class TableManager;
 
@@ -23,16 +26,18 @@ public:
 
     Camera *getCamera() const { return _camera; }
 
-    TableManager *getTableManager() const { return _table_manager; }
+//    TableManager *getTableManager() const { return _table_manager; }
 
-    std::vector<Light *> getLights() { return _lights; }
+//    std::vector<Light *> getLights() { return _lights; }
 
     ~Scene();
 
 private:
     Camera *_camera;
-    TableManager *_table_manager;
-    std::vector<Light *> _lights{};
+    Sphere *_sphere;
+//    TableManager *_table_manager;
+//    std::vector<Mesh *> _meshes{};
+//    std::vector<Light *> _lights{};
 };
 
 #endif //BILLIARDS_SCENE_H
