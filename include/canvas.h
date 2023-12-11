@@ -22,6 +22,9 @@ public:
 
     static glm::mat4 getProjectionMatrix() { return _projection_matrix; }
 
+    static bool _left_key;
+    static bool _right_key;
+
 private:
     static GLint _width;
     static GLint _height;
@@ -30,7 +33,6 @@ private:
     static double timeSinceLastFrame;
     static double lastFrameTime;
 
-    static bool _left_key;
     static bool _first_pos;
     static double _xpos;
     static double _ypos;

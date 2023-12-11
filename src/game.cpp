@@ -6,6 +6,7 @@
 #include "scene.h"
 #include "game.h"
 #include "camera.h"
+#include "canvas.h"
 #include <iostream>
 
 Game::Game() {
@@ -33,7 +34,8 @@ void Game::processKeyEvent(int key, int scancode, int action, int mode) {
 
 void Game::processMouseEvent(double xoffset, double yoffset) {
     Camera *cam = Camera::getCurrentCamera();
-    cam->rotateCamera(0.005f * xoffset, 0.005 * yoffset);
+    if (Canvas::_left_key)cam->rotateCamera(0.005f * xoffset, 0.005 * yoffset);
+    if (Canvas::_right_key)cam->dollyCamera(-0.005 * xoffset);
     Program::updateViewMatrix(Camera::getCurrentCamera()->getViewMatrix());
 }
 

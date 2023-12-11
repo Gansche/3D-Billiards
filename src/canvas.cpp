@@ -16,6 +16,7 @@ double Canvas::timeSinceLastFrame = 0;
 double Canvas::lastFrameTime = 0;
 
 bool Canvas::_left_key = false;
+bool Canvas::_right_key = false;
 bool Canvas::_first_pos = true;
 double Canvas::_xpos = 0;
 double Canvas::_ypos = 0;
@@ -23,7 +24,7 @@ double Canvas::_ypos = 0;
 void Canvas::initialize(Game *game) {
     _game = game;
 
-    /* glfw initialize */
+    /* glfw pre_initialize */
     glfwInit();
 
     /* window settings */
@@ -38,9 +39,9 @@ void Canvas::initialize(Game *game) {
     GLFWwindow *window = glfwCreateWindow(_width, _height, "3D-Billiards", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
-    /* glad initialize */
+    /* glad pre_initialize */
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
+        std::cout << "Failed to pre_initialize GLAD" << std::endl;
         return;
     }
 
@@ -56,13 +57,14 @@ void Canvas::initialize(Game *game) {
     glfwSetMouseButtonCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
-    /* view port adn projection matrix */
-    glViewport(0, 0, _width, _height);
-    _projection_matrix = glm::perspective(FoV, float(_width) / float(_height), 0.1f, 100.0f);
-
     glEnable(GL_DEPTH_TEST);
 
     _game->initialize();
+
+    /* view port adn projection matrix */
+    glViewport(0, 0, _width, _height);
+    _projection_matrix = glm::perspective(FoV, float(_width) / float(_height), 0.1f, 100.0f);
+    Program::updateProjectionMatrix(_projection_matrix);
 
     /* main loop */
     while (!glfwWindowShouldClose(window)) {
@@ -102,13 +104,14 @@ void Canvas::cursor_callback(GLFWwindow *window, double xposIn, double yposIn) {
     double yoffset = _ypos - yposIn;
     _xpos = xposIn;
     _ypos = yposIn;
-    if (_left_key) _game->processMouseEvent(xoffset, yoffset);
+    _game->processMouseEvent(xoffset, yoffset);
 }
 
 void Canvas::mouse_callback(GLFWwindow *window, int button, int action, int mods) {
     if (button == GLFW_MOUSE_BUTTON_LEFT)_left_key = action;
+    if (button == GLFW_MOUSE_BUTTON_RIGHT)_right_key = action;
 }
 
 void Canvas::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {
-//    _game->processScrollEvent(xoffset, yoffset);
+    _game->processScrollEvent(xoffset, yoffset);
 }

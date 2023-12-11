@@ -34,8 +34,7 @@ public:
 
 private:
     Camera *_camera;
-    Sphere *_sphere;
-//    TableManager *_table_manager;
+    TableManager *_table_manager;
 //    std::vector<Mesh *> _meshes{};
 //    std::vector<Light *> _lights{};
 };
