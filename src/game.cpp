@@ -5,6 +5,7 @@
 #include "state_controler.h"
 #include "scene.h"
 #include "game.h"
+#include "camera.h"
 #include <iostream>
 
 Game::Game() {
@@ -30,8 +31,10 @@ void Game::processKeyEvent(int key, int scancode, int action, int mode) {
 
 }
 
-void Game::processMouseEvent(double xposIn, double yposIn) {
-
+void Game::processMouseEvent(double xoffset, double yoffset) {
+    Camera *cam = Camera::getCurrentCamera();
+    cam->rotateCamera(0.005f * xoffset, 0.005 * yoffset);
+    Program::updateViewMatrix(Camera::getCurrentCamera()->getViewMatrix());
 }
 
 void Game::processScrollEvent(double xoffset, double yoffset) {

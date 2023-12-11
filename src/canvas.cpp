@@ -6,6 +6,7 @@
 #include "program.h"
 #include "canvas.h"
 #include "game.h"
+#include "defs.h"
 
 GLint Canvas::_width = 800;
 GLint Canvas::_height = 600;
@@ -13,6 +14,11 @@ glm::mat4 Canvas::_projection_matrix = glm::mat4(1.0f);
 Game *Canvas::_game = nullptr;
 double Canvas::timeSinceLastFrame = 0;
 double Canvas::lastFrameTime = 0;
+
+bool Canvas::_left_key = false;
+bool Canvas::_first_pos = true;
+double Canvas::_xpos = 0;
+double Canvas::_ypos = 0;
 
 void Canvas::initialize(Game *game) {
     _game = game;
@@ -37,7 +43,7 @@ void Canvas::initialize(Game *game) {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return;
     }
-    _game->initialize();
+
     /* Full Screen: may be useful */
 //    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 //    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
@@ -46,14 +52,17 @@ void Canvas::initialize(Game *game) {
     /* callback settings */
     glfwSetKeyCallback(window, key_callback);
     glfwSetWindowSizeCallback(window, window_size_callback);
-    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetCursorPosCallback(window, cursor_callback);
+    glfwSetMouseButtonCallback(window, mouse_callback);
     glfwSetScrollCallback(window, scroll_callback);
 
     /* view port adn projection matrix */
     glViewport(0, 0, _width, _height);
-    _projection_matrix = glm::perspective(90.0f, float(_width) / float(_height), 0.0f, 100.0f);
+    _projection_matrix = glm::perspective(FoV, float(_width) / float(_height), 0.1f, 100.0f);
 
     glEnable(GL_DEPTH_TEST);
+
+    _game->initialize();
 
     /* main loop */
     while (!glfwWindowShouldClose(window)) {
@@ -69,6 +78,7 @@ void Canvas::initialize(Game *game) {
     }
     glfwTerminate();
 }
+
 //todo 这些回调函数都没有设置好，因为不知道采取什么方式处理，就先不管了
 void Canvas::key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
 //    _game->processKeyEvent(key, scancode, action, mode);
@@ -78,12 +88,25 @@ void Canvas::window_size_callback(GLFWwindow *window, int newWidth, int newHeigh
     _width = newWidth;
     _height = newHeight;
     glViewport(0, 0, _width, _height);
-    _projection_matrix = glm::perspective(90.0f, float(_width) / float(_height), 0.0f, 100.0f);
+    _projection_matrix = glm::perspective(FoV, float(_width) / float(_height), 0.1f, 100.0f);
     Program::updateProjectionMatrix(_projection_matrix);
 }
 
-void Canvas::mouse_callback(GLFWwindow *window, double xposIn, double yposIn) {
-//    _game->processMouseEvent(xposIn, yposIn);
+void Canvas::cursor_callback(GLFWwindow *window, double xposIn, double yposIn) {
+    if (_first_pos) {
+        _xpos = xposIn;
+        _ypos = yposIn;
+        _first_pos = false;
+    }
+    double xoffset = _xpos - xposIn;
+    double yoffset = _ypos - yposIn;
+    _xpos = xposIn;
+    _ypos = yposIn;
+    if (_left_key) _game->processMouseEvent(xoffset, yoffset);
+}
+
+void Canvas::mouse_callback(GLFWwindow *window, int button, int action, int mods) {
+    if (button == GLFW_MOUSE_BUTTON_LEFT)_left_key = action;
 }
 
 void Canvas::scroll_callback(GLFWwindow *window, double xoffset, double yoffset) {

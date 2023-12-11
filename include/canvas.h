@@ -16,9 +16,11 @@ class Canvas {
 public:
     Canvas() = default;
 
-    void initialize(Game* game);
+    void initialize(Game *game);
 
     ~Canvas() = default;
+
+    static glm::mat4 getProjectionMatrix() { return _projection_matrix; }
 
 private:
     static GLint _width;
@@ -28,11 +30,18 @@ private:
     static double timeSinceLastFrame;
     static double lastFrameTime;
 
+    static bool _left_key;
+    static bool _first_pos;
+    static double _xpos;
+    static double _ypos;
+
     static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);
 
     static void window_size_callback(GLFWwindow *window, int newWidth, int newHeight);
 
-    static void mouse_callback(GLFWwindow *window, double xposIn, double yposIn);
+    static void cursor_callback(GLFWwindow *window, double xposIn, double yposIn);
+
+    static void mouse_callback(GLFWwindow* window, int button, int action, int mods);
 
     static void scroll_callback(GLFWwindow *window, double xoffset, double yoffset);
 };

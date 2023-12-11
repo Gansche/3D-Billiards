@@ -21,7 +21,7 @@ public:
 
     void processKeyEvent(int key, int scancode, int action, int mode);
 
-    void processMouseEvent(double xposIn, double yposIn);
+    void processMouseEvent(double xoffset, double yoffset);
 
     void processScrollEvent(double xoffset, double yoffset);
 

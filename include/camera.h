@@ -7,34 +7,37 @@
 
 #include <glm/glm.hpp>
 #include <list>
+#include "object.h"
+#include "defs.h"
 
-class Camera {
+class Camera : public Object {
 public:
-    explicit Camera(glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f),
-                    glm::vec3 world_up = glm::vec3(0.0f, 1.0f, 0.0f),
-                    glm::vec3 direction = glm::vec3(0.0f, 0.0f, -1.0f));
+    Camera(glm::vec3 position, glm::vec3 direction);
 
-    glm::mat4 getLookAtMatrix() { return _view_matrix; }
+    Camera *use();
 
-    // TODO: camera rotation and movement
-    void rotateCamera();
+    glm::mat4 getViewMatrix() { return _view_matrix; }
 
-    ~Camera() = default;
+    void dollyCamera(float dist);
+
+    void truckCamera(float dx, float dy);
+
+    void rotateCamera(float rx, float ry);
+
+    ~Camera();
 
     static Camera *getCurrentCamera() { return _current_camera; }
 
 private:
-    glm::vec3 _center;
     glm::vec3 _horizontal;
-    glm::vec3 _direction;
     glm::vec3 _up;
-    glm::vec3 _world_up;
 
     glm::mat4 _view_matrix;
 
     static Camera *_current_camera;
     static std::list<Camera *> _active_cameras;
 
+    void updateVectors();
     void updateViewMatrix();
 };
 
