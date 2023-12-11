@@ -820,7 +820,7 @@ typedef struct
 
 static void stbi__refill_buffer(stbi__context *s);
 
-// initialize a memory-decode context
+// pre_initialize a memory-decode context
 static void stbi__start_mem(stbi__context *s, stbi_uc const *buffer, int len)
 {
    s->io.read = NULL;
@@ -830,7 +830,7 @@ static void stbi__start_mem(stbi__context *s, stbi_uc const *buffer, int len)
    s->img_buffer_end = s->img_buffer_original_end = (stbi_uc *) buffer+len;
 }
 
-// initialize a callback-based context
+// pre_initialize a callback-based context
 static void stbi__start_callbacks(stbi__context *s, stbi_io_callbacks *c, void *user)
 {
    s->io = *c;
@@ -3365,7 +3365,7 @@ static int stbi__decode_jpeg_header(stbi__jpeg *z, int scan)
    int m;
    z->jfif = 0;
    z->app14_color_transform = -1; // valid values are 0,1,2
-   z->marker = STBI__MARKER_none; // initialize cached marker to empty
+   z->marker = STBI__MARKER_none; // pre_initialize cached marker to empty
    m = stbi__get_marker(z);
    if (!stbi__SOI(m)) return stbi__err("no SOI","Corrupt JPEG");
    if (scan == STBI__SCAN_type) return 1;
@@ -7898,7 +7898,7 @@ STBIDEF int stbi_is_16_bit_from_callbacks(stbi_io_callbacks const *c, void *user
               fix a threading bug (local mutable static)
       1.17    support interlaced PNG
       1.16    major bugfix - stbi__convert_format converted one too many pixels
-      1.15    initialize some fields for thread safety
+      1.15    pre_initialize some fields for thread safety
       1.14    fix threadsafe conversion bug
               header-file-only version (#define STBI_HEADER_FILE_ONLY before including)
       1.13    threadsafe

@@ -41,6 +41,18 @@ public:
 
     glm::vec3 getAngularAcceleration() { return _angular_acceleration; }
 
+    virtual glm::vec3 setPosition(glm::vec3 newPosition);
+
+    virtual glm::vec3 setDirection(glm::vec3 newDirection);
+
+    virtual glm::vec3 setAcceleration(glm::vec3 newAcceleration);
+
+    virtual glm::vec3 setVelocity(glm::vec3 newVelocity);
+
+    virtual glm::vec3 setAngularAcceleration(glm::vec3 newAngularAcceleration);
+
+    virtual glm::vec3 setAngularVelocity(glm::vec3 newAngularVelocity);
+
     virtual ~Object();
 
 protected:
@@ -54,33 +66,25 @@ protected:
 
 class Sphere : public Object {
 public:
-    Sphere(Program *program);
+    explicit Sphere(glm::vec3 position, glm::vec3 direction = glm::vec3(0, 0, 0));
 
     void render();
+
+    static void initialize(Program *program);
 
     ~Sphere() = default;
 
 private:
-    GLuint VAO;
-    GLuint VBO[3];
-    GLuint EBO;
-
-    glm::vec3 m_Angle;
-    glm::vec3 position;
-
     glm::mat4 _model_matrix;
-    glm::mat4 _view_matrix;
-    glm::mat4 _projection_matrix;
 
-    float horizontalAngle;
-    float verticalAngle;
+    static GLuint VAO;
+    static GLuint VBO[3];
+    static GLuint EBO;
 
-    Program *_program;
+    static Program *_program;
 
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
-
-    void initialize();
+    static std::vector<Vertex> vertices;
+    static std::vector<unsigned int> indices;
 };
 
 

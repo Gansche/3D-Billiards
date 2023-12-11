@@ -3,9 +3,7 @@
 //
 
 #include "object.h"
-#include "canvas.h"
 #include "shader.h"
-#include "texture.h"
 #include "defs.h"
 #include "camera.h"
 
@@ -16,21 +14,44 @@ Object::Object() {
 
 Object::Object(glm::vec3 position, glm::vec3 direction) :
         _position(position), _direction(direction) {
-
 }
+
+glm::vec3 Object::setPosition(glm::vec3 newPosition) { return _position = newPosition; }
+
+glm::vec3 Object::setDirection(glm::vec3 newDirection) { return _direction = newDirection; }
+
+glm::vec3 Object::setAcceleration(glm::vec3 newAcceleration) { return _acceleration = newAcceleration; }
+
+glm::vec3 Object::setVelocity(glm::vec3 newVelocity) { return _velocity = newVelocity; }
+
+glm::vec3 Object::setAngularAcceleration(
+        glm::vec3 newAngularAcceleration) { return _angular_acceleration = newAngularAcceleration; }
+
+glm::vec3 Object::setAngularVelocity(glm::vec3 newAngularVelocity) { return _angular_velocity = newAngularVelocity; }
 
 Object::~Object() = default;
 
+/* sphere */
+GLuint Sphere::VAO = 0;
+GLuint Sphere::VBO[3] = {0, 0, 0};
+GLuint Sphere::EBO = 0;
 
-Sphere::Sphere(Program *program) : _program(program) {
-    initialize();
+Program *Sphere::_program = nullptr;
+
+std::vector<Vertex> Sphere::vertices{};
+std::vector<unsigned int> Sphere::indices{};
+
+
+Sphere::Sphere(glm::vec3 position, glm::vec3 direction) {
+    _model_matrix = glm::mat4(1.0f);
+    _model_matrix = glm::translate(_model_matrix, position);
 }
 
 //todo:debug
 void Sphere::render() {
     _program->bind();
     _program->setMat4("model", _model_matrix);
-    _program->setVec3("viewPos",Camera::getCurrentCamera()->getPosition());
+    _program->setVec3("viewPos", Camera::getCurrentCamera()->getPosition());
 
     glBindVertexArray(VAO);
     // Draw the triangle !
@@ -49,14 +70,10 @@ void Sphere::render() {
     _program->unbind();
 }
 
-void Sphere::initialize() {
-    _view_matrix = Camera::getCurrentCamera()->getViewMatrix();
-    _projection_matrix = Canvas::getProjectionMatrix();
-    _model_matrix = glm::mat4(1.0f);
+void Sphere::initialize(Program *program) {
+    _program = program;
 
     _program->bind();
-    _program->setMat4("projection", _projection_matrix);
-    _program->setMat4("view", _view_matrix);
     _program->setVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
     _program->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
     _program->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
