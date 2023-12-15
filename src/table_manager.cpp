@@ -7,14 +7,16 @@
 
 TableManager::TableManager() {
     Sphere *newSphere;
-    for (int i = 0; i < 10; i++) {
-        newSphere = new Sphere(glm::vec3(i, 0, 0));
-        _billiards.push_back(newSphere);
-        newSphere = new Sphere(glm::vec3(0, i, 0));
-        _billiards.push_back(newSphere);
-        newSphere = new Sphere(glm::vec3(0, 0, i));
-        _billiards.push_back(newSphere);
-    }
+//    for (int i = 0; i < 10; i++) {
+//        newSphere = new Sphere(glm::vec3(i, 0, 0));
+//        _billiards.push_back(newSphere);
+//        newSphere = new Sphere(glm::vec3(0, i, 0));
+//        _billiards.push_back(newSphere);
+//        newSphere = new Sphere(glm::vec3(0, 0, i));
+//        _billiards.push_back(newSphere);
+//    }
+    newSphere = new Sphere(glm::vec3(0, 0, 0));
+    _billiards.push_back(newSphere);
 }
 
 void TableManager::render() {

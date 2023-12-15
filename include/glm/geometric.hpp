@@ -96,7 +96,7 @@ namespace glm
 		vec<L, T, Q> const& N);
 
 	/// For the incident vector I and surface normal N,
-	/// and the ratio of indices of refraction eta,
+	/// and the ratio of _indices of refraction eta,
 	/// return the refraction vector.
 	///
 	/// @tparam L An integer between 1 and 4 included that qualify the dimension of the vector.

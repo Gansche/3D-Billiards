@@ -66,15 +66,30 @@ void Canvas::initialize(Game *game) {
     _projection_matrix = glm::perspective(FoV, float(_width) / float(_height), 0.1f, 100.0f);
     Program::updateProjectionMatrix(_projection_matrix);
 
+    double startTime = glfwGetTime();
+    int frameCount = 0;
+
     /* main loop */
     while (!glfwWindowShouldClose(window)) {
+        /* calculate the FPS */
+        frameCount++;
+        double currentTime = glfwGetTime();
+        double elapsedTime = currentTime - startTime;
+        if (elapsedTime >= 1.0f) {
+            double fps = frameCount / elapsedTime;
+            std::cout << "\rFPS: " << fps;
+            startTime = currentTime;
+            frameCount = 0;
+        }
+
         timeSinceLastFrame = glfwGetTime() - lastFrameTime;
         lastFrameTime = glfwGetTime();
+
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
         glfwPollEvents();
-        //TODO
+
         _game->render();
         glfwSwapBuffers(window);
     }

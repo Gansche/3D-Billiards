@@ -12,7 +12,7 @@ class Camera;
 
 class Light;
 
-class Mesh;
+class Model;
 
 class TableManager;
 
@@ -35,7 +35,8 @@ public:
 private:
     Camera *_camera;
     TableManager *_table_manager;
-//    std::vector<Mesh *> _meshes{};
+    Model * _mesh;
+//    std::vector<Model *> _meshes{};
 //    std::vector<Light *> _lights{};
 };
 

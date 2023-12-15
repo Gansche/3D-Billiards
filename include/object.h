@@ -23,6 +23,8 @@ typedef struct {
 
 class Program;
 
+/* object */
+
 class Object {
 public:
     Object();
@@ -64,6 +66,8 @@ protected:
     glm::vec3 _angular_acceleration;
 };
 
+/* sphere */
+
 class Sphere : public Object {
 public:
     explicit Sphere(glm::vec3 position, glm::vec3 direction = glm::vec3(0, 0, 0));
@@ -78,13 +82,38 @@ private:
     glm::mat4 _model_matrix;
 
     static GLuint VAO;
-    static GLuint VBO[3];
+    static GLuint VBO;
     static GLuint EBO;
 
     static Program *_program;
 
-    static std::vector<Vertex> vertices;
-    static std::vector<unsigned int> indices;
+    static std::vector<Vertex> _vertices;
+    static std::vector<unsigned int> _indices;
+};
+
+/* mesh */
+
+class Model : public Object {
+public:
+    Model(const char *filename, const char *directory, Program *program);
+
+    void render();
+
+    ~Model() = default;
+
+private:
+    glm::mat4 _model_matrix;
+
+    GLuint VAO;
+    GLuint VBO;
+    GLuint EBO;
+
+    Program *_program;
+
+    std::vector<Vertex> _vertices;
+    std::vector<unsigned int> _indices;
+
+    void initialize();
 };
 
 

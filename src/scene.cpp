@@ -13,24 +13,33 @@ Scene::Scene() {
 }
 
 void Scene::generate() {
-    Shader *vertex_shader = new Shader("shaders/billiard_vs.glsl", "VERTEX");
-    Shader *fragment_shader = new Shader("shaders/billiard_fs.glsl", "FRAGMENT");
-    std::vector<Shader *> shaders;
-    shaders.push_back(vertex_shader);
-    shaders.push_back(fragment_shader);
+    Shader *billiard_vertex_shader = new Shader("resources/shaders/billiard_vs.glsl", "VERTEX");
+    Shader *billiard_fragment_shader = new Shader("resources/shaders/billiard_fs.glsl", "FRAGMENT");
+    std::vector<Shader *> billiard_shaders;
+    billiard_shaders.push_back(billiard_vertex_shader);
+    billiard_shaders.push_back(billiard_fragment_shader);
+    Program *billiard_shade_program = new Program(billiard_shaders);
 
-    Program *program = new Program(shaders);
+    Shader *phongLighting_vertex_shader = new Shader("resources/shaders/billiard_vs.glsl", "VERTEX");
+    Shader *phongLighting_fragment_shader = new Shader("resources/shaders/billiard_fs.glsl", "FRAGMENT");
+    std::vector<Shader *> phongLighting_shaders;
+    phongLighting_shaders.push_back(phongLighting_vertex_shader);
+    phongLighting_shaders.push_back(phongLighting_fragment_shader);
+    Program *phongLighting_shade_program = new Program(phongLighting_shaders);
 
     _camera = new Camera(glm::vec3(3, 3, 3), glm::vec3(-1, -1, -1));
     Program::updateViewMatrix(Camera::getCurrentCamera()->getViewMatrix());
 
-    Sphere::initialize(program);
+    Sphere::initialize(billiard_shade_program);
     _table_manager = new TableManager();
+
+    _mesh = new Model("house-02.obj", "resources/models/house/", phongLighting_shade_program);
 
 }
 
 void Scene::render() {
     _table_manager->render();
+    _mesh->render();
 }
 
 Scene::~Scene() {
