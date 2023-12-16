@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include "texture.h"
 #include "object.h"
 #include "shader.h"
 #include "defs.h"
@@ -11,11 +12,20 @@
 
 /* object */
 Object::Object() {
-
+    _position = glm::vec3(0.0f, 0.0f, 0.0f);
+    _direction = glm::vec3(0.0f, 0.0f, 0.0f);
+    _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+    _acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+    _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+    _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 Object::Object(glm::vec3 position, glm::vec3 direction) :
         _position(position), _direction(direction) {
+    _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+    _acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+    _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+    _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 glm::vec3 Object::setPosition(glm::vec3 newPosition) { return _position = newPosition; }
@@ -46,7 +56,6 @@ std::vector<unsigned int> Sphere::_indices{};
 
 Sphere::Sphere(glm::vec3 position, glm::vec3 direction) : Object(position, direction) {
     _model_matrix = glm::mat4(1.0f);
-    _model_matrix = glm::translate(_model_matrix, _position);
 
 }
 
@@ -57,18 +66,7 @@ void Sphere::render() {
     _program->setVec3("viewPos", Camera::getCurrentCamera()->getPosition());
 
     glBindVertexArray(VAO);
-    // Draw the triangle !
-    //glDrawArrays(GL_TRIANGLES, 0, 6); // 3 _indices starting at 0 -> 1 triangle
-
-    // could be modified to use GL_TRIANGLE_FAN and GL_TRIANGLE_STRIP
-    // to draw the poles and the rest of the sphere,
-    // but this will be 2 draw call. Should we??? (draw cal optimizations and such things...)
-    glDrawElements(
-            GL_TRIANGLES,      // mode
-            _indices.size(),    // count
-            GL_UNSIGNED_INT,   // type
-            (void *) 0           // element array buffer offset
-    );//*/
+    glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, (void *) 0);
     glBindVertexArray(0);
     _program->unbind();
 }
@@ -177,27 +175,79 @@ Model::Model(const char *filename, const char *directory, Program *program) : _p
     if (!err.empty())std::cout << err << std::endl;
     if (!ok)exit(0);
 
-    std::vector<tinyobj::index_t> indices = shapes[5].mesh.indices;
+
+    std::vector<Vertex> _vertices;
+
     std::vector<tinyobj::real_t> vertices = attrib.vertices;
     std::vector<tinyobj::real_t> normals = attrib.normals;
-    for (auto &index: indices) {
-        Vertex vertex;
-        vertex.v = glm::vec3(vertices[3 * index.vertex_index], vertices[3 * index.vertex_index + 1],
-                             vertices[3 * index.vertex_index + 2]);
-        vertex.n = glm::vec3(normals[3 * index.normal_index], normals[3 * index.normal_index + 1],
-                             normals[3 * index.normal_index + 2]);
-        vertex.c = glm::vec3(0.529, 0.808, 0.922);
-        vertex.u = glm::vec2(0.0f, 0.0f);
-        _vertices.push_back(vertex);
+    std::vector<tinyobj::real_t> texcoords = attrib.texcoords;
+
+    for (auto &shapePtr: shapes) {
+        std::vector<tinyobj::index_t> indices = shapePtr.mesh.indices;
+        for (auto &index: indices) {
+            Vertex vertex;
+            vertex.v = glm::vec3(vertices[3 * index.vertex_index], vertices[3 * index.vertex_index + 1],
+                                 vertices[3 * index.vertex_index + 2]);
+            vertex.n = glm::vec3(normals[3 * index.normal_index], normals[3 * index.normal_index + 1],
+                                 normals[3 * index.normal_index + 2]);
+            vertex.c = glm::vec3(0.529, 0.808, 0.922);
+            vertex.u = glm::vec2(texcoords[2 * index.texcoord_index], texcoords[2 * index.texcoord_index + 1]);
+            _vertices.push_back(vertex);
+        }
+
+        Shape *shape = new Shape;
+
+        glGenVertexArrays(1, &shape->VAO);
+        glBindVertexArray(shape->VAO);
+
+        glGenBuffers(1, &shape->VBO);
+        glBindBuffer(GL_ARRAY_BUFFER, shape->VBO);
+        glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) 0);
+        glEnableVertexAttribArray(0);
+
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              (void *) reinterpret_cast<void *>(offsetof(Vertex, n)));
+        glEnableVertexAttribArray(1);
+
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                              (void *) reinterpret_cast<void *>(offsetof(Vertex, u)));
+        glEnableVertexAttribArray(2);
+
+
+        shape->count = _vertices.size();
+
+        _shapes.push_back(shape);
+
+        _vertices.clear();
     }
 
-    initialize();
-//    std::cout << _vertices[0].v.x << std::endl;
-//    std::cout << _vertices[0].v.y << std::endl;
-//    std::cout << _vertices[0].v.z << std::endl;
-
     _model_matrix = glm::mat4(1.0f);
-//    _model_matrix = glm::translate(_model_matrix, _position);
+
+    _diffuse_texture = new Texture("resources/models/table/LuxuryPoolTable_Diffuse_Map.png");
+    _diffuse_texture->generate();
+
+    _metalness_texture = new Texture("resources/models/table/LuxuryPoolTable_Metalness_Map.png");
+    _metalness_texture->generate();
+
+    _normal_texture = new Texture("resources/models/table/LuxuryPoolTable_Normal_Map.png");
+    _normal_texture->generate();
+
+    _roughness_texture = new Texture("resources/models/table/LuxuryPoolTable_Roughness_Map.png");
+    _roughness_texture->generate();
+
+    _program->bind();
+    _program->setVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
+    _program->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    _program->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+
+    _program->setInt("diffuse_texture",0);
+    _program->setInt("metalness_texture",1);
+    _program->setInt("normal_texture",2);
+    _program->setInt("roughness_texture",3);
+
+    _program->unbind();
 }
 
 void Model::render() {
@@ -205,48 +255,19 @@ void Model::render() {
     _program->setMat4("model", _model_matrix);
     _program->setVec3("viewPos", Camera::getCurrentCamera()->getPosition());
 
-    glBindVertexArray(VAO);
-    // Draw the triangle !
-    //glDrawArrays(GL_TRIANGLES, 0, 6); // 3 _indices starting at 0 -> 1 triangle
+    for (auto &shape: _shapes) {
+        glActiveTexture(GL_TEXTURE0);
+        _diffuse_texture->bind();
+        glActiveTexture(GL_TEXTURE1);
+        _metalness_texture->bind();
+        glActiveTexture(GL_TEXTURE2);
+        _normal_texture->bind();
+        glActiveTexture(GL_TEXTURE3);
+        _roughness_texture->bind();
+        glBindVertexArray(shape->VAO);
+        glDrawArrays(GL_TRIANGLES, 0, shape->count);
+        glBindVertexArray(0);
+    }
 
-    // could be modified to use GL_TRIANGLE_FAN and GL_TRIANGLE_STRIP
-    // to draw the poles and the rest of the sphere,
-    // but this will be 2 draw call. Should we??? (draw cal optimizations and such things...)
-//    glDrawElements(
-//            GL_TRIANGLES,      // mode
-//            _vertices.size(),    // count
-//            GL_UNSIGNED_INT,   // type
-//            (void *) 0           // element array buffer offset
-//    );
-    glDrawArrays(GL_TRIANGLES, 0, _vertices.size());
-    glBindVertexArray(0);
     _program->unbind();
-}
-
-void Model::initialize() {
-    _program->bind();
-    _program->setVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
-    _program->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-    _program->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
-    _program->unbind();
-
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
-
-//    glGenBuffers(1, &EBO);
-//    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//    glBufferData(GL_ELEMENT_ARRAY_BUFFER, _indices.size() * sizeof(unsigned int), &_indices[0], GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) 0);
-    glEnableVertexAttribArray(0);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *) reinterpret_cast<void *>(offsetof(Vertex, c)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *) reinterpret_cast<void *>(offsetof(Vertex, n)));
-    glEnableVertexAttribArray(2);
 }

@@ -20,8 +20,8 @@ void Scene::generate() {
     billiard_shaders.push_back(billiard_fragment_shader);
     Program *billiard_shade_program = new Program(billiard_shaders);
 
-    Shader *phongLighting_vertex_shader = new Shader("resources/shaders/billiard_vs.glsl", "VERTEX");
-    Shader *phongLighting_fragment_shader = new Shader("resources/shaders/billiard_fs.glsl", "FRAGMENT");
+    Shader *phongLighting_vertex_shader = new Shader("resources/shaders/table_vs.glsl", "VERTEX");
+    Shader *phongLighting_fragment_shader = new Shader("resources/shaders/table_fs.glsl", "FRAGMENT");
     std::vector<Shader *> phongLighting_shaders;
     phongLighting_shaders.push_back(phongLighting_vertex_shader);
     phongLighting_shaders.push_back(phongLighting_fragment_shader);
@@ -33,12 +33,12 @@ void Scene::generate() {
     Sphere::initialize(billiard_shade_program);
     _table_manager = new TableManager();
 
-    _mesh = new Model("house-02.obj", "resources/models/house/", phongLighting_shade_program);
+    _mesh = new Model("LuxuryPoolTable.obj", "resources/models/table/", phongLighting_shade_program);
 
 }
 
 void Scene::render() {
-    _table_manager->render();
+//    _table_manager->render();
     _mesh->render();
 }
 

@@ -105,7 +105,7 @@ void Canvas::window_size_callback(GLFWwindow *window, int newWidth, int newHeigh
     _width = newWidth;
     _height = newHeight;
     glViewport(0, 0, _width, _height);
-    _projection_matrix = glm::perspective(FoV, float(_width) / float(_height), 0.1f, 100.0f);
+    _projection_matrix = glm::perspective(FoV, float(_width) / float(_height), 0.1f, 1000.0f);
     Program::updateProjectionMatrix(_projection_matrix);
 }
 

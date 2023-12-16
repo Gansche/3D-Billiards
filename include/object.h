@@ -21,6 +21,14 @@ typedef struct {
     glm::vec2 u;
 } Vertex;
 
+typedef struct {
+    int count;
+    GLuint VAO;
+    GLuint VBO;
+} Shape;
+
+class Texture;
+
 class Program;
 
 /* object */
@@ -104,16 +112,13 @@ public:
 private:
     glm::mat4 _model_matrix;
 
-    GLuint VAO;
-    GLuint VBO;
-    GLuint EBO;
-
+    Texture *_diffuse_texture;
+    Texture *_metalness_texture;
+    Texture *_normal_texture;
+    Texture *_roughness_texture;
     Program *_program;
 
-    std::vector<Vertex> _vertices;
-    std::vector<unsigned int> _indices;
-
-    void initialize();
+    std::vector<Shape *> _shapes{};
 };
 
 
