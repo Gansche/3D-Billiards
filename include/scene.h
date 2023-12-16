@@ -22,6 +22,8 @@ public:
 
     void generate();
 
+    void update();
+
     void render();
 
     Camera *getCamera() const { return _camera; }

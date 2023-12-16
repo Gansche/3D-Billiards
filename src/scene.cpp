@@ -37,8 +37,12 @@ void Scene::generate() {
 
 }
 
+void Scene::update(){
+    _table_manager->UpdateTable();
+}
+
 void Scene::render() {
-//    _table_manager->render();
+    _table_manager->render();
     _mesh->render();
 }
 

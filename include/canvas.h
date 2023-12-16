@@ -22,6 +22,8 @@ public:
 
     static glm::mat4 getProjectionMatrix() { return _projection_matrix; }
 
+    static double getTimeSinceLastFrame() { return timeSinceLastFrame; }
+
     static bool _left_key;
     static bool _right_key;
 

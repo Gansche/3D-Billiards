@@ -15,7 +15,7 @@ Object::Object() {
     _position = glm::vec3(0.0f, 0.0f, 0.0f);
     _direction = glm::vec3(0.0f, 0.0f, 0.0f);
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-    _acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+    _acceleration = 0;
     _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
@@ -23,7 +23,7 @@ Object::Object() {
 Object::Object(glm::vec3 position, glm::vec3 direction) :
         _position(position), _direction(direction) {
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
-    _acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
+    _acceleration = 0;
     _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
@@ -32,7 +32,7 @@ glm::vec3 Object::setPosition(glm::vec3 newPosition) { return _position = newPos
 
 glm::vec3 Object::setDirection(glm::vec3 newDirection) { return _direction = newDirection; }
 
-glm::vec3 Object::setAcceleration(glm::vec3 newAcceleration) { return _acceleration = newAcceleration; }
+double Object::setAcceleration(double newAcceleration) { return _acceleration = newAcceleration; }
 
 glm::vec3 Object::setVelocity(glm::vec3 newVelocity) { return _velocity = newVelocity; }
 
@@ -56,8 +56,44 @@ std::vector<unsigned int> Sphere::_indices{};
 
 Sphere::Sphere(glm::vec3 position, glm::vec3 direction) : Object(position, direction) {
     _model_matrix = glm::mat4(1.0f);
-
+    _model_matrix = glm::translate(_model_matrix, _position);
 }
+
+void Sphere::update(double t) {
+    glm::vec3 pos = getPosition();
+    glm::vec3 v = getVelocity();
+    double a = getAcceleration();
+
+    double px = pos.x;
+    double py = pos.y;
+    double pz = pos.z;
+
+    //std::cout << px << py << pz << std::endl;
+
+    double vx = v.x;
+    double vy = v.y;
+    double vz = v.z;
+
+    //std::cout << vx << vy << vz << std::endl;
+
+    double ax = (vx / sqrtf(vx * vx + vz * vz)) * a;
+    double az = (vz / sqrtf(vx * vx + vz * vz)) * a;
+
+
+    px += vx * t - 0.5 * ax * t * t;
+    pz += vz * t - 0.5 * az * t * t;
+    vx -= ax * t;
+    vz -= az * t;
+
+    setPosition(glm::vec3(px, py, pz));
+    setVelocity(glm::vec3(vx, vy, vz));
+    _model_matrix = glm::translate(_model_matrix, this->getPosition() - pos);
+    return;
+}
+
+bool Sphere::setIfinHole(bool flag) { return if_in_hole = flag; }
+
+int Sphere::setId(int newId) { return id = newId; }
 
 //todo:debug
 void Sphere::render() {
@@ -242,10 +278,10 @@ Model::Model(const char *filename, const char *directory, Program *program) : _p
     _program->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
     _program->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
 
-    _program->setInt("diffuse_texture",0);
-    _program->setInt("metalness_texture",1);
-    _program->setInt("normal_texture",2);
-    _program->setInt("roughness_texture",3);
+    _program->setInt("diffuse_texture", 0);
+    _program->setInt("metalness_texture", 1);
+    _program->setInt("normal_texture", 2);
+    _program->setInt("roughness_texture", 3);
 
     _program->unbind();
 }

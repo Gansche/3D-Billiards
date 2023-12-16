@@ -45,7 +45,7 @@ public:
 
     glm::vec3 getVelocity() { return _velocity; }
 
-    glm::vec3 getAcceleration() { return _acceleration; }
+    double getAcceleration() { return _acceleration; }
 
     glm::vec3 getAngularVelocity() { return _angular_velocity; }
 
@@ -55,7 +55,7 @@ public:
 
     virtual glm::vec3 setDirection(glm::vec3 newDirection);
 
-    virtual glm::vec3 setAcceleration(glm::vec3 newAcceleration);
+    virtual double setAcceleration(double newAcceleration);
 
     virtual glm::vec3 setVelocity(glm::vec3 newVelocity);
 
@@ -63,15 +63,24 @@ public:
 
     virtual glm::vec3 setAngularVelocity(glm::vec3 newAngularVelocity);
 
+//    virtual bool setIfinHole(bool flag);
+//
+//    virtual int setId(int newId);
+
     virtual ~Object();
 
 protected:
     glm::vec3 _position;
     glm::vec3 _direction;
     glm::vec3 _velocity;
-    glm::vec3 _acceleration;
     glm::vec3 _angular_velocity;
+    double _acceleration;
     glm::vec3 _angular_acceleration;
+//    // add
+//    bool if_in_hole;
+//    static int id;
+//    static double radius;
+//    //
 };
 
 /* sphere */
@@ -84,9 +93,22 @@ public:
 
     static void initialize(Program *program);
 
+    bool getIfinHole() { return  if_in_hole; }
+
+    int getId() { return id; }
+
+    virtual bool setIfinHole(bool flag);
+
+    virtual int setId(int newId);
+
+    void update(double time);
+
     ~Sphere() = default;
 
 private:
+    bool if_in_hole;
+    int id;
+
     glm::mat4 _model_matrix;
 
     static GLuint VAO;

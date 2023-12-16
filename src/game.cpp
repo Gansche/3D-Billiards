@@ -21,7 +21,7 @@ void Game::initialize() {
 }
 
 void Game::update() {
-
+    _scene->update();
 }
 
 void Game::render() {
