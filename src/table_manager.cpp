@@ -122,8 +122,6 @@ void TableManager::render() {
 void TableManager::UpdateTable() {
     BallColPair.clear();
     EdgeColPair.clear();
-//    for(auto &b : _billiards)
-//        std::cout << "B" << b->getPosition().x << " " << b->getPosition().z << std::endl;
     for (auto &b: _billiards) {
         if (b->getIfinHole()) continue;
         for (auto &h: _holes) {
@@ -141,7 +139,6 @@ void TableManager::UpdateTable() {
             std::pair<Sphere *, Sphere *> transponse = {b2, b1};
 
             if (IfCollisionBall(b1, b2)) {
-                //std::cout << "b" << std::endl;
                 bool flag = true;
                 for (auto &p: BallColPair) {
                     if (p == transponse) flag = false;
@@ -152,8 +149,6 @@ void TableManager::UpdateTable() {
     }
 
     for (auto &p: BallColPair) {
-//        std::cout << "B" << p.first->getPosition().x << " " << p.first->getPosition().z;
-//        std::cout << "B" << p.second->getPosition().x << " " << p.second->getPosition().z;
         BallBallCollision(p.first, p.second);
     }
 
@@ -161,7 +156,6 @@ void TableManager::UpdateTable() {
         if (b->getIfinHole()) continue;
         for (auto &e: _edges) {
             if (IfCollisionEdge(b, e)) {
-                //std::cout << "e" << std::endl;
                 std::pair<Sphere *, Edge *> origin = {b, e};
                 EdgeColPair.push_back(origin);
             }
@@ -169,14 +163,11 @@ void TableManager::UpdateTable() {
     }
 
     for (auto &p: EdgeColPair) {
-//        std::cout << "E" << p.second->getStartPos().x << " " << p.second->getStartPos().z << " " << p.second->getEndPos().x <<" " << p.second->getEndPos().z << std::endl;
-//        std::cout << "B" << p.first->getPosition().x << " " << p.first->getPosition().z;
         EdgeBallCollision(p.first, p.second);
     }
     for (auto &b: _billiards) {
 //        if(b->getIfinHole()) continue;
         b->update(Canvas::getTimeSinceLastFrame());
-        //std::cout << b->getPosition().x << " " << b->getPosition().z << std::endl;
     }
 }
 
@@ -192,10 +183,8 @@ bool TableManager::IfCollisionHole(Sphere *billiard, Hole *hole) {
 bool TableManager::IfCollisionBall(Sphere *billiard1, Sphere *billiard2) {
     glm::vec3 del = (billiard1->getPosition() - billiard2->getPosition());
     double distance = sqrtf(del.x * del.x + del.y * del.y + del.z * del.z);
-    //std::cout << "DEL" << distance << std::endl;
     if (distance <= 2 * RADIUS) {
         double backdis = (2 * RADIUS - distance) / 2.0;
-        //std::cout << "BD" << backdis << std::endl;
         double b1_x = billiard1->getPosition().x + backdis * del.x / distance;
         double b1_y = billiard1->getPosition().y;
         double b1_z = billiard1->getPosition().z + backdis * del.z / distance;
@@ -297,7 +286,6 @@ void TableManager::BallBallCollision(Sphere *billiard1, Sphere *billiard2) {
 }
 
 void TableManager::EdgeBallCollision(Sphere *billiard, Edge *edge) {
-    //std::cout << 1 << std::endl;
     double x0 = billiard->getPosition().x;
     double y0 = billiard->getPosition().y;
     double z0 = billiard->getPosition().z;

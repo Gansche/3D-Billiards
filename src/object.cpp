@@ -14,14 +14,13 @@
 /* object */
 Object::Object() {
     _position = glm::vec3(0.0f, 0.0f, 0.0f);
-//    _direction = glm::vec3(0.0f, 0.0f, 0.0f);
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _acceleration = 0;
     _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-Object::Object(glm::vec3 position) :_position(position) {
+Object::Object(glm::vec3 position) : _position(position) {
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _acceleration = 0;
     _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -29,8 +28,6 @@ Object::Object(glm::vec3 position) :_position(position) {
 }
 
 glm::vec3 Object::setPosition(glm::vec3 newPosition) { return _position = newPosition; }
-
-//glm::vec3 Object::setDirection(glm::vec3 newDirection) { return _direction = newDirection; }
 
 double Object::setAcceleration(double newAcceleration) { return _acceleration = newAcceleration; }
 
@@ -68,20 +65,15 @@ void Sphere::update(double t) {
     double py = pos.y;
     double pz = pos.z;
 
-    //std::cout << px << py << pz << std::endl;
-
     double vx = v.x;
     double vy = v.y;
     double vz = v.z;
 
-    if(vx == 0 && vz == 0)
-        return ;
-
-    //std::cout << vx << vy << vz << std::endl;
+    if (vx == 0 && vz == 0)
+        return;
 
     double ax = (vx / sqrtf(vx * vx + vz * vz)) * a;
     double az = (vz / sqrtf(vx * vx + vz * vz)) * a;
-
 
     px += vx * t - 0.5 * ax * t * t;
     pz += vz * t - 0.5 * az * t * t;
@@ -246,20 +238,15 @@ Model::Model(const char *filename, const char *directory, Program *program) : _p
 
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) 0);
         glEnableVertexAttribArray(0);
-
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                               (void *) reinterpret_cast<void *>(offsetof(Vertex, n)));
         glEnableVertexAttribArray(1);
-
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                               (void *) reinterpret_cast<void *>(offsetof(Vertex, u)));
         glEnableVertexAttribArray(2);
 
-
         shape->count = _vertices.size();
-
         _shapes.push_back(shape);
-
         _vertices.clear();
     }
 
