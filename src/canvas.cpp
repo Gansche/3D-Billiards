@@ -70,6 +70,7 @@ void Canvas::initialize(Game *game) {
     int frameCount = 0;
 
     /* main loop */
+    lastFrameTime = glfwGetTime();
     while (!glfwWindowShouldClose(window)) {
         /* calculate the FPS */
         frameCount++;
@@ -77,7 +78,7 @@ void Canvas::initialize(Game *game) {
         double elapsedTime = currentTime - startTime;
         if (elapsedTime >= 1.0f) {
             double fps = frameCount / elapsedTime;
-            std::cout << "\rFPS: " << fps;
+            //std::cout << "\rFPS: " << fps;
             startTime = currentTime;
             frameCount = 0;
         }
@@ -85,6 +86,7 @@ void Canvas::initialize(Game *game) {
         timeSinceLastFrame = glfwGetTime() - lastFrameTime;
         lastFrameTime = glfwGetTime();
 
+        std::cout << timeSinceLastFrame;
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
@@ -92,6 +94,8 @@ void Canvas::initialize(Game *game) {
 
         _game->update();
         _game->render();
+
+
         glfwSwapBuffers(window);
     }
     glfwTerminate();

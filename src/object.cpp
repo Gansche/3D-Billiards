@@ -74,6 +74,9 @@ void Sphere::update(double t) {
     double vy = v.y;
     double vz = v.z;
 
+    if(vx == 0 && vz == 0)
+        return ;
+
     //std::cout << vx << vy << vz << std::endl;
 
     double ax = (vx / sqrtf(vx * vx + vz * vz)) * a;
