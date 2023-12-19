@@ -5,7 +5,7 @@
 #ifndef BILLIARDS_DEFS_H
 #define BILLIARDS_DEFS_H
 
-#define RADIUS 0.05f
+#define RADIUS 0.035f
 #define LATITUDE 100
 #define LONGITUDE 100
 

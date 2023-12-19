@@ -37,11 +37,11 @@ class Object {
 public:
     Object();
 
-    Object(glm::vec3 position, glm::vec3 direction);
+    Object(glm::vec3 position);
 
     glm::vec3 getPosition() { return _position; }
 
-    glm::vec3 getDirection() { return _direction; }
+//    glm::vec3 getDirection() { return _direction; }
 
     glm::vec3 getVelocity() { return _velocity; }
 
@@ -53,7 +53,7 @@ public:
 
     virtual glm::vec3 setPosition(glm::vec3 newPosition);
 
-    virtual glm::vec3 setDirection(glm::vec3 newDirection);
+//    virtual glm::vec3 setDirection(glm::vec3 newDirection);
 
     virtual double setAcceleration(double newAcceleration);
 
@@ -71,7 +71,7 @@ public:
 
 protected:
     glm::vec3 _position;
-    glm::vec3 _direction;
+//    glm::vec3 _direction;
     glm::vec3 _velocity;
     glm::vec3 _angular_velocity;
     double _acceleration;
@@ -87,7 +87,7 @@ protected:
 
 class Sphere : public Object {
 public:
-    explicit Sphere(glm::vec3 position, glm::vec3 direction = glm::vec3(0, 0, 0));
+    explicit Sphere(glm::vec3 position);
 
     void render();
 

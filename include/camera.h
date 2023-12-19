@@ -29,6 +29,7 @@ public:
     static Camera *getCurrentCamera() { return _current_camera; }
 
 private:
+    glm::vec3  _direction;
     glm::vec3 _horizontal;
     glm::vec3 _up;
 

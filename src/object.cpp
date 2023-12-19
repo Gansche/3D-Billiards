@@ -8,20 +8,20 @@
 #include "shader.h"
 #include "defs.h"
 #include "camera.h"
+#include "light.h"
 #include "tiny_obj_loader.h"
 
 /* object */
 Object::Object() {
     _position = glm::vec3(0.0f, 0.0f, 0.0f);
-    _direction = glm::vec3(0.0f, 0.0f, 0.0f);
+//    _direction = glm::vec3(0.0f, 0.0f, 0.0f);
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _acceleration = 0;
     _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-Object::Object(glm::vec3 position, glm::vec3 direction) :
-        _position(position), _direction(direction) {
+Object::Object(glm::vec3 position) :_position(position) {
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _acceleration = 0;
     _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
@@ -30,7 +30,7 @@ Object::Object(glm::vec3 position, glm::vec3 direction) :
 
 glm::vec3 Object::setPosition(glm::vec3 newPosition) { return _position = newPosition; }
 
-glm::vec3 Object::setDirection(glm::vec3 newDirection) { return _direction = newDirection; }
+//glm::vec3 Object::setDirection(glm::vec3 newDirection) { return _direction = newDirection; }
 
 double Object::setAcceleration(double newAcceleration) { return _acceleration = newAcceleration; }
 
@@ -54,7 +54,7 @@ std::vector<Vertex> Sphere::_vertices{};
 std::vector<unsigned int> Sphere::_indices{};
 
 
-Sphere::Sphere(glm::vec3 position, glm::vec3 direction) : Object(position, direction) {
+Sphere::Sphere(glm::vec3 position) : Object(position) {
     _model_matrix = glm::mat4(1.0f);
     _model_matrix = glm::translate(_model_matrix, _position);
 }
@@ -98,7 +98,6 @@ bool Sphere::setIfinHole(bool flag) { return if_in_hole = flag; }
 
 int Sphere::setId(int newId) { return id = newId; }
 
-//todo:debug
 void Sphere::render() {
     _program->bind();
     _program->setMat4("model", _model_matrix);
@@ -113,9 +112,11 @@ void Sphere::render() {
 void Sphere::initialize(Program *program) {
     _program = program;
 
+    std::vector<Light *> lights = Light::getLights();
+
     _program->bind();
-    _program->setVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
-    _program->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    _program->setVec3("lightPos", lights[0]->getPosition());
+    _program->setVec3("lightColor", lights[0]->getColor());
     _program->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
     _program->unbind();
 
@@ -276,10 +277,11 @@ Model::Model(const char *filename, const char *directory, Program *program) : _p
     _roughness_texture = new Texture("resources/models/table/LuxuryPoolTable_Roughness_Map.png");
     _roughness_texture->generate();
 
+    std::vector<Light *> lights = Light::getLights();
+
     _program->bind();
-    _program->setVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
-    _program->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-    _program->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
+    _program->setVec3("lightPos", lights[0]->getPosition());
+    _program->setVec3("lightColor", lights[0]->getColor());
 
     _program->setInt("diffuse_texture", 0);
     _program->setInt("metalness_texture", 1);
@@ -292,7 +294,7 @@ Model::Model(const char *filename, const char *directory, Program *program) : _p
 void Model::render() {
     _program->bind();
     _program->setMat4("model", _model_matrix);
-    _program->setVec3("viewPos", Camera::getCurrentCamera()->getPosition());
+    _program->setVec3("cameraPos", Camera::getCurrentCamera()->getPosition());
 
     for (auto &shape: _shapes) {
         glActiveTexture(GL_TEXTURE0);

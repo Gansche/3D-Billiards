@@ -11,8 +11,8 @@
 Camera *Camera::_current_camera = nullptr;
 std::list<Camera *> Camera::_active_cameras{};
 
-Camera::Camera(glm::vec3 position, glm::vec3 direction) : Object(position, direction) {
-    _direction = glm::normalize(_direction);
+Camera::Camera(glm::vec3 position, glm::vec3 direction) : Object(position) {
+    _direction = glm::normalize(direction);
     _horizontal = glm::normalize(glm::cross(_direction, Y_UNIT_VECTOR));
     _up = glm::normalize(glm::cross(_horizontal, _direction));
     _active_cameras.push_back(this);

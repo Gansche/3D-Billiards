@@ -31,6 +31,7 @@ void Canvas::initialize(Game *game) {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_SAMPLES, 4);
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -58,6 +59,7 @@ void Canvas::initialize(Game *game) {
     glfwSetScrollCallback(window, scroll_callback);
 
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_MULTISAMPLE);
 
     _game->initialize();
 
@@ -78,7 +80,7 @@ void Canvas::initialize(Game *game) {
         double elapsedTime = currentTime - startTime;
         if (elapsedTime >= 1.0f) {
             double fps = frameCount / elapsedTime;
-            //std::cout << "\rFPS: " << fps;
+            std::cout << "\rFPS: " << fps;
             startTime = currentTime;
             frameCount = 0;
         }
@@ -101,7 +103,6 @@ void Canvas::initialize(Game *game) {
     glfwTerminate();
 }
 
-//todo 这些回调函数都没有设置好，因为不知道采取什么方式处理，就先不管了
 void Canvas::key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
 //    _game->processKeyEvent(key, scancode, action, mode);
 }

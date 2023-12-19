@@ -38,6 +38,7 @@ private:
     Camera *_camera;
     TableManager *_table_manager;
     Model * _mesh;
+    Model * _mesh2;
 //    std::vector<Model *> _meshes{};
 //    std::vector<Light *> _lights{};
 };
