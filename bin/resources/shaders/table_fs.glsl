@@ -7,7 +7,6 @@ in vec2 TexCoord;
 
 uniform vec3 lightPos;
 uniform vec3 lightColor;
-uniform vec3 objectColor;
 
 uniform vec3 cameraPos;
 

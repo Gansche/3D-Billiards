@@ -6,8 +6,8 @@
 #define BILLIARDS_DEFS_H
 
 #define RADIUS 0.035f
-#define LATITUDE 100
-#define LONGITUDE 100
+#define LATITUDE 500
+#define LONGITUDE 500
 
 #define Y_UNIT_VECTOR glm::vec3(0.0f, 1.0f, 0.0f)
 

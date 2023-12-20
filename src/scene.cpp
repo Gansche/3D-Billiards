@@ -37,7 +37,7 @@ void Scene::generate() {
     _table_manager = new TableManager();
 
     _mesh = new Model("LuxuryPoolTable.obj", "resources/models/table/", phongLighting_shade_program);
-    _mesh2 = new Model("uploads_files_3798056_disco.obj", "resources/models/room/", phongLighting_shade_program);
+//    _mesh2 = new Model("uploads_files_3798056_disco.obj", "resources/models/room/", phongLighting_shade_program);
 }
 
 void Scene::update() {
@@ -47,7 +47,7 @@ void Scene::update() {
 void Scene::render() {
     _table_manager->render();
     _mesh->render();
-    _mesh2->render();
+//    _mesh2->render();
 }
 
 Scene::~Scene() {

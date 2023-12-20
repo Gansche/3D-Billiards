@@ -111,6 +111,8 @@ private:
 
     glm::mat4 _model_matrix;
 
+    Texture *_diffuse_texture;
+
     static GLuint VAO;
     static GLuint VBO;
     static GLuint EBO;

@@ -54,6 +54,13 @@ std::vector<unsigned int> Sphere::_indices{};
 Sphere::Sphere(glm::vec3 position) : Object(position) {
     _model_matrix = glm::mat4(1.0f);
     _model_matrix = glm::translate(_model_matrix, _position);
+
+    _program->bind();
+    _diffuse_texture = new Texture("resources/textures/stripe_9.png");
+    _diffuse_texture->generate();
+
+    _program->setInt("diffuse_texture", 0);
+    _program->unbind();
 }
 
 void Sphere::update(double t) {
@@ -93,8 +100,10 @@ int Sphere::setId(int newId) { return id = newId; }
 void Sphere::render() {
     _program->bind();
     _program->setMat4("model", _model_matrix);
-    _program->setVec3("viewPos", Camera::getCurrentCamera()->getPosition());
+    _program->setVec3("cameraPos", Camera::getCurrentCamera()->getPosition());
 
+    glActiveTexture(GL_TEXTURE0);
+    _diffuse_texture->bind();
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, _indices.size(), GL_UNSIGNED_INT, (void *) 0);
     glBindVertexArray(0);
@@ -109,7 +118,6 @@ void Sphere::initialize(Program *program) {
     _program->bind();
     _program->setVec3("lightPos", lights[0]->getPosition());
     _program->setVec3("lightColor", lights[0]->getColor());
-    _program->setVec3("objectColor", glm::vec3(1.0f, 0.5f, 0.31f));
     _program->unbind();
 
     Vertex v;
@@ -182,12 +190,11 @@ void Sphere::initialize(Program *program) {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) 0);
     glEnableVertexAttribArray(0);
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                          (void *) reinterpret_cast<void *>(offsetof(Vertex, c)));
-    glEnableVertexAttribArray(1);
-    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (void *) reinterpret_cast<void *>(offsetof(Vertex, n)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) reinterpret_cast<void *>(offsetof(Vertex, u)));
     glEnableVertexAttribArray(2);
-
 }
 
 /* mesh */
