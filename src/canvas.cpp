@@ -8,8 +8,8 @@
 #include "game.h"
 #include "defs.h"
 
-GLint Canvas::_width = 800;
-GLint Canvas::_height = 600;
+GLint Canvas::_width = 3000;
+GLint Canvas::_height = 2000;
 glm::mat4 Canvas::_projection_matrix = glm::mat4(1.0f);
 Game *Canvas::_game = nullptr;
 double Canvas::timeSinceLastFrame = 0;
@@ -37,7 +37,8 @@ void Canvas::initialize(Game *game) {
 #endif
 
     /* create window */
-    GLFWwindow *window = glfwCreateWindow(_width, _height, "3D-Billiards", nullptr, nullptr);
+    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+    GLFWwindow *window = glfwCreateWindow(_width, _height, "3D-Billiards", monitor, nullptr);
     glfwMakeContextCurrent(window);
 
     /* glad pre_initialize */
@@ -47,9 +48,9 @@ void Canvas::initialize(Game *game) {
     }
 
     /* Full Screen: may be useful */
-//    GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-//    const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-//    glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+    _height = mode->height;
+    _width = mode->width;
 
     /* callback settings */
     glfwSetKeyCallback(window, key_callback);
@@ -88,8 +89,6 @@ void Canvas::initialize(Game *game) {
         timeSinceLastFrame = glfwGetTime() - lastFrameTime;
         lastFrameTime = glfwGetTime();
 
-        std::cout << timeSinceLastFrame;
-
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // also clear the depth buffer now!
         glfwPollEvents();
@@ -104,7 +103,8 @@ void Canvas::initialize(Game *game) {
 }
 
 void Canvas::key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
-//    _game->processKeyEvent(key, scancode, action, mode);
+    if (key == GLFW_KEY_ESCAPE && action == 1)
+        glfwSetWindowShouldClose(window, 1);
 }
 
 void Canvas::window_size_callback(GLFWwindow *window, int newWidth, int newHeight) {

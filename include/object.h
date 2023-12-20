@@ -45,9 +45,9 @@ public:
 
     glm::vec3 getVelocity() { return _velocity; }
 
-    double getAcceleration() { return _acceleration; }
+    double getAcceleration() const { return _acceleration; }
 
-    glm::vec3 getAngularVelocity() { return _angular_velocity; }
+    double getAngularVelocity() const { return _angular_velocity; }
 
     glm::vec3 getAngularAcceleration() { return _angular_acceleration; }
 
@@ -61,8 +61,11 @@ public:
 
     virtual glm::vec3 setAngularAcceleration(glm::vec3 newAngularAcceleration);
 
-    virtual glm::vec3 setAngularVelocity(glm::vec3 newAngularVelocity);
+    virtual double setAngularVelocity(double newAngularVelocity);
 
+    virtual double setAngle(double angle);
+
+    float getAngle() const { return _angle; }
 //    virtual bool setIfinHole(bool flag);
 //
 //    virtual int setId(int newId);
@@ -73,8 +76,9 @@ protected:
     glm::vec3 _position;
 //    glm::vec3 _direction;
     glm::vec3 _velocity;
-    glm::vec3 _angular_velocity;
+    double _angular_velocity;
     double _acceleration;
+    double _angle;
     glm::vec3 _angular_acceleration;
 //    // add
 //    bool if_in_hole;
@@ -93,7 +97,7 @@ public:
 
     static void initialize(Program *program);
 
-    bool getIfinHole() { return  if_in_hole; }
+    bool getIfinHole() { return if_in_hole; }
 
     int getId() { return id; }
 

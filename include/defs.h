@@ -4,11 +4,11 @@
 
 #ifndef BILLIARDS_DEFS_H
 #define BILLIARDS_DEFS_H
-
-#define RADIUS 0.035f
-#define LATITUDE 500
-#define LONGITUDE 500
-
+#define RADIUS 0.05f
+#define LATITUDE 300
+#define LONGITUDE 300
+#define ACCLAR 0.6
+#define EPS 0.005
 #define Y_UNIT_VECTOR glm::vec3(0.0f, 1.0f, 0.0f)
 
 #define FoV 45.0f

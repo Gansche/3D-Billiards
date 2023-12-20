@@ -5,7 +5,14 @@
 #include <windows.h>
 #include "table_manager.h"
 #include "shader.h"
+#include "defs.h"
 #include "canvas.h"
+
+//#include <irrklang/irrKlang.h>
+//using namespace irrklang;
+//
+//ISoundEngine *SoundEngine = createIrrKlangDevice();
+//irrklang::ISoundEngine *SoundEngine = irrklang::createIrrKlangDevice();
 
 double max(double a, double b) {
     return (a > b) ? a : b;
@@ -21,92 +28,221 @@ TableManager::TableManager() {
 }
 
 void TableManager::Init() {
-    _timeofthisframe = 0.1;
+    //_timeofthisframe = 0.1;
+    double a = ACCLAR;
     int id_cnt = 0;
     Sphere *newSphere;
-    newSphere = new Sphere(glm::vec3(0, 0.95, 0));
-    newSphere->setVelocity(glm::vec3(-0.2, 0, 0));
-    newSphere->setAcceleration(0);
+
+    newSphere = new Sphere(glm::vec3(0.05, 0.95, 0.5));
+    newSphere->setVelocity(glm::vec3(0, 0, -10));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
     newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
     newSphere->setIfinHole(false);
     _billiards.push_back(newSphere);
 
-    newSphere = new Sphere(glm::vec3(0.5, 0.95, 0.2));
-    newSphere->setVelocity(glm::vec3(-0.3, 0, 0.1));
-    newSphere->setAcceleration(0);
+    newSphere = new Sphere(glm::vec3(0.0, 0.95, -0.7));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
     newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
     newSphere->setIfinHole(false);
     _billiards.push_back(newSphere);
 
-    newSphere = new Sphere(glm::vec3(-0.1, 0.95, 0.2));
-    newSphere->setVelocity(glm::vec3(-0.3, 0, 0.1));
-    newSphere->setAcceleration(0);
+
+    newSphere = new Sphere(glm::vec3(0.1, 0.95, -0.7));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
     newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
     newSphere->setIfinHole(false);
     _billiards.push_back(newSphere);
 
-    newSphere = new Sphere(glm::vec3(0.1, 0.95, 0.2));
-    newSphere->setVelocity(glm::vec3(0.3, 0, 0.1));
-    newSphere->setAcceleration(0);
+    newSphere = new Sphere(glm::vec3(-0.1, 0.95, -0.7));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
     newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
     newSphere->setIfinHole(false);
     _billiards.push_back(newSphere);
 
-    newSphere = new Sphere(glm::vec3(0.5, 0.95, 1));
-    newSphere->setVelocity(glm::vec3(-0.1, 0, 0.2));
-    newSphere->setAcceleration(0);
+    newSphere = new Sphere(glm::vec3(0.2, 0.95, -0.7));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
     newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
     newSphere->setIfinHole(false);
     _billiards.push_back(newSphere);
+
+    newSphere = new Sphere(glm::vec3(-0.2, 0.95, -0.7));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+//
+//    //
+    double delta = RADIUS * sqrtf(3);
+
+    newSphere = new Sphere(glm::vec3(0.05, 0.95, -0.7 + delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+//
+    newSphere = new Sphere(glm::vec3(-0.05, 0.95, -0.7 + delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    newSphere = new Sphere(glm::vec3(0.15, 0.95, -0.7 + delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    newSphere = new Sphere(glm::vec3(-0.15, 0.95, -0.7 + delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    //------------------------------------------------------------------------------
+
+    newSphere = new Sphere(glm::vec3(0, 0.95, -0.7 + 2 * delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    newSphere = new Sphere(glm::vec3(0.1, 0.95, -0.7 + 2 * delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    newSphere = new Sphere(glm::vec3(-0.1, 0.95, -0.7 + 2 * delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    //---------------------------------------------------------------------------------
+
+    newSphere = new Sphere(glm::vec3(0.05, 0.95, -0.7 + 3 * delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    newSphere = new Sphere(glm::vec3(-0.05, 0.95, -0.7 + 3 * delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+
+    //---------------------------------------------------------------------------------
+
+    newSphere = new Sphere(glm::vec3(0, 0.95, -0.7 + 4 * delta));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
+    newSphere->setAcceleration(a);
+    newSphere->setAngularVelocity(0.0);
+    newSphere->setId(id_cnt++);
+    newSphere->setAngle(0.0);
+    newSphere->setIfinHole(false);
+    _billiards.push_back(newSphere);
+//
+//    //------------------------------------------------------------------------------------
+
 
 
     Edge *newedge = new Edge();
-    newedge->setStartPos(glm::vec3(-0.573, 0.95, -1.33));
-    newedge->setEndPos(glm::vec3(0.573, 0.95, -1.33));
+    newedge->setStartPos(glm::vec3(-0.52, 0.95, -1.255));
+    newedge->setEndPos(glm::vec3(0.52, 0.95, -1.255));
     _edges.push_back(newedge);
     newedge = new Edge();
-    newedge->setStartPos(glm::vec3(-0.573, 0.95, 1.33));
-    newedge->setEndPos(glm::vec3(0.573, 0.95, 1.33));
+    newedge->setStartPos(glm::vec3(-0.52, 0.95, 1.255));
+    newedge->setEndPos(glm::vec3(0.52, 0.95, 1.255));
     _edges.push_back(newedge);
     newedge = new Edge();
-    newedge->setStartPos(glm::vec3(-0.675, 0.95, -0.05));
-    newedge->setEndPos(glm::vec3(-0.675, 0.95, -1.228));
+    newedge->setStartPos(glm::vec3(-0.61, 0.95, -0.075));
+    newedge->setEndPos(glm::vec3(-0.61, 0.95, -1.18));
     _edges.push_back(newedge);
     newedge = new Edge();
-    newedge->setStartPos(glm::vec3(-0.675, 0.95, 0.05));
-    newedge->setEndPos(glm::vec3(-0.675, 0.95, 1.228));
+    newedge->setStartPos(glm::vec3(-0.61, 0.95, 0.075));
+    newedge->setEndPos(glm::vec3(-0.61, 0.95, 1.18));
     _edges.push_back(newedge);
     newedge = new Edge();
-    newedge->setStartPos(glm::vec3(0.675, 0.95, -0.05));
-    newedge->setEndPos(glm::vec3(0.675, 0.95, -1.228));
+    newedge->setStartPos(glm::vec3(0.61, 0.95, -0.075));
+    newedge->setEndPos(glm::vec3(0.61, 0.95, -1.18));
     _edges.push_back(newedge);
     newedge = new Edge();
-    newedge->setStartPos(glm::vec3(0.675, 0.95, 0.05));
-    newedge->setEndPos(glm::vec3(0.675, 0.95, 1.228));
+    newedge->setStartPos(glm::vec3(0.61, 0.95, 0.075));
+    newedge->setEndPos(glm::vec3(0.61, 0.95, 1.18));
     _edges.push_back(newedge);
+//    newedge = new Edge();
+//    newedge->setStartPos(glm::vec3(-1.5, 0.95, 0));
+//    newedge->setEndPos(glm::vec3(0, 0.95, 1.5));
+//    _edges.push_back(newedge);
 
     Hole *newhole = new Hole();
-    newhole->setRadius(0.07);
+    double R = 0.09;
+    newhole->setRadius(R);
     newhole->setPos(glm::vec3(0.615, 0.95, 0));
     _holes.push_back(newhole);
     newhole = new Hole();
-    newhole->setRadius(0.07);
+    newhole->setRadius(R);
     newhole->setPos(glm::vec3(-0.615, 0.95, 0));
     _holes.push_back(newhole);
     newhole = new Hole();
-    newhole->setRadius(0.07);
+    newhole->setRadius(R);
     newhole->setPos(glm::vec3(0.615, 0.95, 1.265));
     _holes.push_back(newhole);
     newhole = new Hole();
-    newhole->setRadius(0.07);
+    newhole->setRadius(R);
     newhole->setPos(glm::vec3(0.615, 0.95, -1.265));
     _holes.push_back(newhole);
     newhole = new Hole();
-    newhole->setRadius(0.07);
+    newhole->setRadius(R);
     newhole->setPos(glm::vec3(-0.615, 0.95, 1.265));
     _holes.push_back(newhole);
     newhole = new Hole();
-    newhole->setRadius(0.07);
+    newhole->setRadius(R);
     newhole->setPos(glm::vec3(-0.615, 0.95, -1.265));
     _holes.push_back(newhole);
 }
@@ -122,6 +258,12 @@ void TableManager::render() {
 void TableManager::UpdateTable() {
     BallColPair.clear();
     EdgeColPair.clear();
+    for (auto &b: _billiards) {
+        glm::vec3 pos = b->getPosition();
+        if (pos.x > 0.675 || pos.x < -0.675 || pos.z > 1.33 || pos.z < -1.33)
+            b->setIfinHole(true);
+    }
+
     for (auto &b: _billiards) {
         if (b->getIfinHole()) continue;
         for (auto &h: _holes) {
@@ -163,18 +305,21 @@ void TableManager::UpdateTable() {
     }
 
     for (auto &p: EdgeColPair) {
+//        std::cout << "e";
         EdgeBallCollision(p.first, p.second);
     }
     for (auto &b: _billiards) {
 //        if(b->getIfinHole()) continue;
+        //std::cout << b->getIfinHole() << " ";
         b->update(Canvas::getTimeSinceLastFrame());
     }
+//    std::cout << std::endl;
 }
 
 bool TableManager::IfCollisionHole(Sphere *billiard, Hole *hole) {
     glm::vec3 del = billiard->getPosition() - hole->getPosition();
     double distance = sqrtf(del.x * del.x + del.y * del.y + del.z * del.z);
-    std::cout << distance << std::endl;
+    //std::cout << distance << std::endl;
     if (distance < hole->getRadius())
         return true;
     return false;
@@ -200,7 +345,6 @@ bool TableManager::IfCollisionBall(Sphere *billiard1, Sphere *billiard2) {
 }
 
 bool TableManager::IfCollisionEdge(Sphere *billiard, Edge *edge) {
-    //std::cout << 1 << std::endl;
     double x0 = billiard->getPosition().x;
     double y0 = billiard->getPosition().y;
     double z0 = billiard->getPosition().z;
@@ -230,7 +374,6 @@ bool TableManager::IfCollisionEdge(Sphere *billiard, Edge *edge) {
     } else {
         d = abs(z0 - z1);
         if ((d <= RADIUS) && (x0 <= max(x1, x2)) && (x0 >= min(x1, x2))) {
-            //std::cout << 6 << std::endl;
             double dz = RADIUS - d;
             double newz;
             if (z0 > z1)
@@ -243,13 +386,6 @@ bool TableManager::IfCollisionEdge(Sphere *billiard, Edge *edge) {
         }
     }
     return false;
-//    if (d < RADIUS && maxlen * maxlen <= len * len + d * d) {
-//        double size = (RADIUS - d) / d;
-//        glm::vec3 newdel = glm::vec3(nx * size, 0, nz *size);
-//        glm::vec3 newPos = newdel + billiard->getPosition();
-//        billiard->setPosition(newPos);
-//        return true;
-//    }
 }
 
 void TableManager::BallBallCollision(Sphere *billiard1, Sphere *billiard2) {
@@ -313,5 +449,39 @@ void TableManager::EdgeBallCollision(Sphere *billiard, Edge *edge) {
     billiard->setVelocity(glm::vec3(vx0, vy0, vz0));
     return;
 }
+//
+//
+//void TableManager::EdgeBallCollision(Sphere *billiard, Edge *edge) {
+//    double x0 = billiard->getPosition().x;
+//    double y0 = billiard->getPosition().y;
+//    double z0 = billiard->getPosition().z;
+//
+//    double vx0 = billiard->getVelocity().x;
+//    double vy0 = billiard->getVelocity().y;
+//    double vz0 = billiard->getVelocity().z;
+//
+//    double x1 = edge->getStartPos().x;
+//    double y1 = edge->getStartPos().y;
+//    double z1 = edge->getStartPos().z;
+//
+//    double x2 = edge->getEndPos().x;
+//    double y2 = edge->getEndPos().y;
+//    double z2 = edge->getEndPos().z;
+//
+//    double vxn, vzn;
+//    if (x1 == x2) {
+//        vxn = -vx0;
+//        vzn = vz0;
+//    }
+//    else
+//    {
+//        double k = (z2 - z1) / (x2 - x1);
+//        vxn = (2 * k * vz0 - (k * k - 1) * vx0) / (k * k + 1);
+//        vzn = (2 * k * vx0 + (k * k - 1) * vz0) / (k * k + 1);
+//    }
+//
+//    billiard->setVelocity(glm::vec3(vxn, vy0, vzn));
+//    return;
+//}
 
 TableManager::~TableManager() = default;

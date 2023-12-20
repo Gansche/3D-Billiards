@@ -16,14 +16,14 @@ Object::Object() {
     _position = glm::vec3(0.0f, 0.0f, 0.0f);
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _acceleration = 0;
-    _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+    _angular_velocity = 0.0f;
     _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
 Object::Object(glm::vec3 position) : _position(position) {
     _velocity = glm::vec3(0.0f, 0.0f, 0.0f);
     _acceleration = 0;
-    _angular_velocity = glm::vec3(0.0f, 0.0f, 0.0f);
+    _angular_velocity = 0.0f;
     _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
@@ -36,7 +36,9 @@ glm::vec3 Object::setVelocity(glm::vec3 newVelocity) { return _velocity = newVel
 glm::vec3 Object::setAngularAcceleration(
         glm::vec3 newAngularAcceleration) { return _angular_acceleration = newAngularAcceleration; }
 
-glm::vec3 Object::setAngularVelocity(glm::vec3 newAngularVelocity) { return _angular_velocity = newAngularVelocity; }
+double Object::setAngularVelocity(double newAngularVelocity) { return _angular_velocity = newAngularVelocity; }
+
+double Object::setAngle(double angle) { return _angle = angle; }
 
 Object::~Object() = default;
 
@@ -64,8 +66,46 @@ Sphere::Sphere(glm::vec3 position) : Object(position) {
 }
 
 void Sphere::update(double t) {
+    //std::cout << 1;
+//    if (id == 15) {
+//        std::cout << "model matrix:" << std::endl;
+//        std::cout << _model_matrix[0][0] << _model_matrix[0][1] << _model_matrix[0][2] << _model_matrix[0][3]
+//                  << std::endl;
+//        std::cout << _model_matrix[1][0] << _model_matrix[1][1] << _model_matrix[1][2] << _model_matrix[1][3]
+//                  << std::endl;
+//        std::cout << _model_matrix[2][0] << _model_matrix[2][1] << _model_matrix[2][2] << _model_matrix[2][3]
+//                  << std::endl;
+//        std::cout << _model_matrix[3][0] << _model_matrix[3][1] << _model_matrix[3][2] << _model_matrix[3][3]
+//                  << std::endl;
+//    }
     glm::vec3 pos = getPosition();
     glm::vec3 v = getVelocity();
+
+    glm::vec3 up = glm::vec3(0, 1, 0);    //始终垂直于球台
+    glm::vec3 axis = glm::normalize(-glm::cross(v, up)) ;      //每个球旋转时的轴，可以通过速度向量和垂直于桌面的向量叉乘来得到
+
+    float angle = getAngle();
+
+    double omega = getAngularVelocity();
+    angle += omega * t;
+    if (angle > 360.0)
+        angle -= 360.0;
+    double v_scale = (double) sqrtf(glm::dot(v, v));
+
+    if (omega * RADIUS < v_scale) {
+        omega += 2.5 * ACCLAR * 75.0/ (RADIUS * 1.0) * t;
+    } else {
+        omega = 75.0 * v_scale / RADIUS;
+    }
+    setAngle(angle);
+    setAngularVelocity(omega);
+//    if(id == 15)
+//    {
+//        std::cout<< "angle:" << angle <<std::endl;
+//        std::cout<< "axis:" << axis[0]<<" "<<axis[1]<<" "<<axis[2]<<" "<<std::endl;
+//    }
+
+
     double a = getAcceleration();
 
     double px = pos.x;
@@ -76,21 +116,36 @@ void Sphere::update(double t) {
     double vy = v.y;
     double vz = v.z;
 
-    if (vx == 0 && vz == 0)
+
+    if (sqrtf(glm::dot(v, v)) < EPS)
+    {
+        setVelocity(glm::vec3(0, 0, 0));
+        setAngularVelocity(0.0f);
         return;
+    }
 
     double ax = (vx / sqrtf(vx * vx + vz * vz)) * a;
     double az = (vz / sqrtf(vx * vx + vz * vz)) * a;
 
-    px += vx * t - 0.5 * ax * t * t;
-    pz += vz * t - 0.5 * az * t * t;
-    vx -= ax * t;
-    vz -= az * t;
+    if (abs(vx) < abs(ax * t) || abs(vz) < abs(az * t)) {
+        px += vx * t - 0.5 * ax * t * t;
+        pz += vz * t - 0.5 * az * t * t;
+        vx -= 0;
+        vz -= 0;
+    } else {
+        px += vx * t - 0.5 * ax * t * t;
+        pz += vz * t - 0.5 * az * t * t;
+        vx -= ax * t;
+        vz -= az * t;
+    }
 
     setPosition(glm::vec3(px, py, pz));
     setVelocity(glm::vec3(vx, vy, vz));
-    _model_matrix = glm::translate(_model_matrix, this->getPosition() - pos);
-    return;
+
+
+    glm::mat4 rotate_mat = glm::rotate(glm::mat4(1.0f), glm::radians(angle), axis);
+    glm::mat4 translate_mat = glm::translate(glm::mat4(1.0f), getPosition());
+    _model_matrix = translate_mat * rotate_mat;
 }
 
 bool Sphere::setIfinHole(bool flag) { return if_in_hole = flag; }
