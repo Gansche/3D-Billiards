@@ -10,6 +10,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <string>
 #include "game.h"
 #include "program.h"
 #include "stb_image.h"
@@ -41,8 +42,6 @@ public:
 
     glm::vec3 getPosition() { return _position; }
 
-//    glm::vec3 getDirection() { return _direction; }
-
     glm::vec3 getVelocity() { return _velocity; }
 
     double getAcceleration() const { return _acceleration; }
@@ -52,8 +51,6 @@ public:
     glm::vec3 getAngularAcceleration() { return _angular_acceleration; }
 
     virtual glm::vec3 setPosition(glm::vec3 newPosition);
-
-//    virtual glm::vec3 setDirection(glm::vec3 newDirection);
 
     virtual double setAcceleration(double newAcceleration);
 
@@ -66,44 +63,35 @@ public:
     virtual double setAngle(double angle);
 
     float getAngle() const { return _angle; }
-//    virtual bool setIfinHole(bool flag);
-//
-//    virtual int setId(int newId);
 
     virtual ~Object();
 
 protected:
     glm::vec3 _position;
-//    glm::vec3 _direction;
     glm::vec3 _velocity;
     double _angular_velocity;
     double _acceleration;
     double _angle;
     glm::vec3 _angular_acceleration;
-//    // add
-//    bool if_in_hole;
-//    static int id;
-//    static double radius;
-//    //
 };
 
 /* sphere */
 
 class Sphere : public Object {
 public:
-    explicit Sphere(glm::vec3 position);
+    explicit Sphere(std::string name, glm::vec3 position);
 
     void render();
 
     static void initialize(Program *program);
 
-    bool getIfinHole() { return if_in_hole; }
+    bool getIfInHole() const { return if_in_hole; }
 
-    int getId() { return id; }
+    std::string getName() const { return _name; }
 
-    virtual bool setIfinHole(bool flag);
+    virtual bool setIfInHole(bool flag);
 
-    virtual int setId(int newId);
+    virtual std::string setName(std::string newName);
 
     void update(double time);
 
@@ -111,7 +99,7 @@ public:
 
 private:
     bool if_in_hole;
-    int id;
+    std::string _name;
 
     glm::mat4 _model_matrix;
 

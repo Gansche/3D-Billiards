@@ -49,11 +49,3 @@ void Scene::render() {
     _mesh->render();
 //    _mesh2->render();
 }
-
-Scene::~Scene() {
-//    delete _camera;
-//    delete _table_manager;
-//    for (auto lightPtr: _lights) {
-//        delete lightPtr;
-//    }
-}

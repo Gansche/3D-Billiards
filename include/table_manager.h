@@ -34,7 +34,7 @@ public:
     ~Hole() = default;
 
     glm::vec3 getPosition() { return position; }
-    double getRadius() { return radius; }
+    double getRadius() const { return radius; }
 
     virtual glm::vec3 setPos(glm::vec3 new_position) { return position = new_position; }
     virtual double setRadius(double R) { return radius = R; }
@@ -50,12 +50,6 @@ public:
 
     void render();
 
-    ~TableManager();
-
-    void addBilliard(Sphere* newball) { _billiards.push_back(newball); }
-    void addEdge(Edge* newedge) { _edges.push_back(newedge); }
-    void addHole(Hole* newhole) { _holes.push_back(newhole); }
-
     void UpdateTable();
 
     void Init();
@@ -70,9 +64,10 @@ public:
 
     bool IfCollisionHole(Sphere* billiard, Hole* hole);
 
+    ~TableManager();
+
     std::vector<std::pair<Sphere*, Sphere*>> BallColPair;
     std::vector<std::pair<Sphere*, Edge*>> EdgeColPair;
-    double _timeofthisframe;
 
 private:
     std::vector<Sphere *> _billiards{};

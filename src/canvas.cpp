@@ -8,8 +8,8 @@
 #include "game.h"
 #include "defs.h"
 
-GLint Canvas::_width = 3000;
-GLint Canvas::_height = 2000;
+GLint Canvas::_width = 800;
+GLint Canvas::_height = 600;
 glm::mat4 Canvas::_projection_matrix = glm::mat4(1.0f);
 Game *Canvas::_game = nullptr;
 double Canvas::timeSinceLastFrame = 0;
@@ -37,8 +37,8 @@ void Canvas::initialize(Game *game) {
 #endif
 
     /* create window */
-    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
-    GLFWwindow *window = glfwCreateWindow(_width, _height, "3D-Billiards", monitor, nullptr);
+//    GLFWmonitor *monitor = glfwGetPrimaryMonitor();
+    GLFWwindow *window = glfwCreateWindow(_width, _height, "3D-Billiards", nullptr, nullptr);
     glfwMakeContextCurrent(window);
 
     /* glad pre_initialize */
@@ -48,9 +48,9 @@ void Canvas::initialize(Game *game) {
     }
 
     /* Full Screen: may be useful */
-    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
-    _height = mode->height;
-    _width = mode->width;
+//    const GLFWvidmode *mode = glfwGetVideoMode(monitor);
+//    _height = mode->height;
+//    _width = mode->width;
 
     /* callback settings */
     glfwSetKeyCallback(window, key_callback);

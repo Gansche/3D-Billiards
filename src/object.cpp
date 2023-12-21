@@ -3,6 +3,7 @@
 //
 
 #include <string>
+#include <utility>
 #include "texture.h"
 #include "object.h"
 #include "shader.h"
@@ -53,12 +54,13 @@ std::vector<Vertex> Sphere::_vertices{};
 std::vector<unsigned int> Sphere::_indices{};
 
 
-Sphere::Sphere(glm::vec3 position) : Object(position) {
+Sphere::Sphere(std::string name, glm::vec3 position) : Object(position), _name(std::move(name)) {
     _model_matrix = glm::mat4(1.0f);
     _model_matrix = glm::translate(_model_matrix, _position);
 
     _program->bind();
-    _diffuse_texture = new Texture("resources/textures/stripe_9.png");
+    std::string textureSource = "resources/textures/" + _name + ".png";
+    _diffuse_texture = new Texture(textureSource.c_str());
     _diffuse_texture->generate();
 
     _program->setInt("diffuse_texture", 0);
@@ -66,23 +68,11 @@ Sphere::Sphere(glm::vec3 position) : Object(position) {
 }
 
 void Sphere::update(double t) {
-    //std::cout << 1;
-//    if (id == 15) {
-//        std::cout << "model matrix:" << std::endl;
-//        std::cout << _model_matrix[0][0] << _model_matrix[0][1] << _model_matrix[0][2] << _model_matrix[0][3]
-//                  << std::endl;
-//        std::cout << _model_matrix[1][0] << _model_matrix[1][1] << _model_matrix[1][2] << _model_matrix[1][3]
-//                  << std::endl;
-//        std::cout << _model_matrix[2][0] << _model_matrix[2][1] << _model_matrix[2][2] << _model_matrix[2][3]
-//                  << std::endl;
-//        std::cout << _model_matrix[3][0] << _model_matrix[3][1] << _model_matrix[3][2] << _model_matrix[3][3]
-//                  << std::endl;
-//    }
     glm::vec3 pos = getPosition();
     glm::vec3 v = getVelocity();
 
-    glm::vec3 up = glm::vec3(0, 1, 0);    //始终垂直于球台
-    glm::vec3 axis = glm::normalize(-glm::cross(v, up)) ;      //每个球旋转时的轴，可以通过速度向量和垂直于桌面的向量叉乘来得到
+    glm::vec3 up = glm::vec3(0, 1, 0);
+    glm::vec3 axis = glm::normalize(-glm::cross(v, up));
 
     float angle = getAngle();
 
@@ -93,18 +83,12 @@ void Sphere::update(double t) {
     double v_scale = (double) sqrtf(glm::dot(v, v));
 
     if (omega * RADIUS < v_scale) {
-        omega += 2.5 * ACCLAR * 75.0/ (RADIUS * 1.0) * t;
+        omega += 2.5 * ACCLAR * 75.0 / (RADIUS * 1.0) * t;
     } else {
         omega = 75.0 * v_scale / RADIUS;
     }
     setAngle(angle);
     setAngularVelocity(omega);
-//    if(id == 15)
-//    {
-//        std::cout<< "angle:" << angle <<std::endl;
-//        std::cout<< "axis:" << axis[0]<<" "<<axis[1]<<" "<<axis[2]<<" "<<std::endl;
-//    }
-
 
     double a = getAcceleration();
 
@@ -117,8 +101,7 @@ void Sphere::update(double t) {
     double vz = v.z;
 
 
-    if (sqrtf(glm::dot(v, v)) < EPS)
-    {
+    if (sqrtf(glm::dot(v, v)) < EPS) {
         setVelocity(glm::vec3(0, 0, 0));
         setAngularVelocity(0.0f);
         return;
@@ -148,9 +131,9 @@ void Sphere::update(double t) {
     _model_matrix = translate_mat * rotate_mat;
 }
 
-bool Sphere::setIfinHole(bool flag) { return if_in_hole = flag; }
+bool Sphere::setIfInHole(bool flag) { return if_in_hole = flag; }
 
-int Sphere::setId(int newId) { return id = newId; }
+std::string Sphere::setName(std::string newName) { return _name = newName; }
 
 void Sphere::render() {
     _program->bind();
@@ -210,14 +193,12 @@ void Sphere::initialize(Program *program) {
             v.v = v.n * RADIUS;
             v.u = glm::vec2((float) i / LATITUDE, (float) j / LONGITUDE);
             _vertices.push_back(v);
-            //_indices.push_back(indicator);
             indicator++;
 
             v.n = glm::vec3(yPolar * x0, yPolar * y0, xPolar);
             v.v = v.n * RADIUS;
             v.u = glm::vec2((float) i / LATITUDE, (float) j / LONGITUDE);
             _vertices.push_back(v);
-            //_indices.push_back(indicator);
             indicator++;
 
             _indices.push_back(indicator - 3);
