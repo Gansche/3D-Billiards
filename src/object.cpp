@@ -344,6 +344,7 @@ Model::Model(const std::string &name, const char *filename, const char *director
 void Model::render() {
     _program->bind();
     if (_name == "stick") {
+        glm::mat4 back_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Game::_back * 0.01));
         glm::vec3 pos = Camera::getActiveCameras()["cue"]->getRelativePosition();
         float angle = asin(pos.x / sqrt(pos.x * pos.x + pos.z * pos.z));
         if (pos.z < 0) {
@@ -351,8 +352,8 @@ void Model::render() {
             else angle = -(angle + glm::pi<float>());
         }
         glm::mat4 rot_matrix = glm::rotate(glm::mat4(1.0f), angle, Y_UNIT_VECTOR);
-        glm::mat4 trans_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.95, 0.5));
-        _program->setMat4("model", trans_matrix * rot_matrix * _model_matrix);
+        glm::mat4 trans_matrix = glm::translate(glm::mat4(1.0f), Camera::getActiveCameras()["cue"]->getRotateCenter());
+        _program->setMat4("model", trans_matrix * rot_matrix * back_matrix * _model_matrix);
     } else _program->setMat4("model", _model_matrix);
     _program->setVec3("cameraPos", Camera::getCurrentCamera()->getPosition());
 

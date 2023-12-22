@@ -39,7 +39,13 @@ Camera *Camera::use(const std::string &name) {
 }
 
 void Camera::setRotateCenter(glm::vec3 center) {
-    // TODO
+    _direction = glm::normalize(_rotate_center - _position);
+    _horizontal = glm::normalize(glm::cross(_direction, Y_UNIT_VECTOR));
+    _up = glm::normalize(glm::cross(_horizontal, _direction));
+    _position -= _rotate_center;
+    _rotate_center = center;
+    _position += _rotate_center;
+    updateViewMatrix();
 }
 
 void Camera::dollyCamera(float dist) {

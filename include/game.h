@@ -8,6 +8,8 @@
 /* game state */
 const int START = 0x00;
 const int AIMING = 0x01;
+const int HITTING = 0x02;
+const int GOING = 0x03;
 
 /* camera state */
 const int OPEN = 0x10;
@@ -37,6 +39,8 @@ public:
 
     static int _game_state;
     static int _camera_state;
+
+    static double _back;
 
 private:
     Scene *_scene;

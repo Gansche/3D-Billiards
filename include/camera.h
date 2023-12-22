@@ -21,6 +21,8 @@ public:
 
     glm::vec3 getRelativePosition() { return _position - _rotate_center; }
 
+    glm::vec3 getRotateCenter() { return _rotate_center; }
+
     void setRotateCenter(glm::vec3 center);
 
     void dollyCamera(float dist);

@@ -28,7 +28,7 @@ void Scene::generate() {
     Program *phongLighting_shade_program = new Program(phongLighting_shaders);
 
     Camera *camera;
-    camera = new Camera("open", glm::vec3(0.0f, 1.5f, 3.0f), glm::vec3(0.0f, -0.3f, -1.0f));
+    camera = new Camera("open", glm::vec3(3.0f, 1.5f, 0.0f), glm::vec3(-1.0f, -0.3f, 0.0f));
     camera = new Camera("cue", glm::vec3(1.5f, 1.5f, 1.5f), glm::vec3(-1, -1, -1), glm::vec3(0.0, 0.95, 0.5));
     camera = new Camera("god", glm::vec3(0, 3, 0), glm::vec3(0, -1, 0));
 
@@ -41,7 +41,7 @@ void Scene::generate() {
 
     _table = new Model("table", "LuxuryPoolTable.obj", R"(resources\models\table\)", phongLighting_shade_program);
     _stick = new Model("stick", "CueStick.obj", R"(resources\models\stick\)", billiard_shade_program);
-    _room =  new Model("room", "disco.obj", R"(resources\models\room\)", billiard_shade_program);
+//    _room =  new Model("room", "disco.obj", R"(resources\models\room\)", billiard_shade_program);
 }
 
 void Scene::update() {
@@ -51,8 +51,8 @@ void Scene::update() {
 void Scene::render() {
     _table_manager->render();
     _table->render();
-    _room->render();
-    if (Game::_game_state == AIMING) {
+//    _room->render();
+    if (Game::_game_state == AIMING || Game::_game_state == HITTING) {
         _stick->render();
     }
 }

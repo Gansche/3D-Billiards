@@ -76,6 +76,8 @@ public:
 
     void setCueBallVelocity(float time);
 
+    glm::vec3 getCueBallPosition();
+
     ~TableManager();
 
     std::vector<std::pair<Sphere *, Sphere *>> BallColPair;

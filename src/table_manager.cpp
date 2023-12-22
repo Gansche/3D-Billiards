@@ -300,6 +300,10 @@ void TableManager::setCueBallVelocity(float time) {
     _billiards[0]->setVelocity(time * dir);
 }
 
+glm::vec3 TableManager::getCueBallPosition(){
+    return _billiards[0]->getPosition();
+}
+
 bool TableManager::IfCollisionBall(Sphere *billiard1, Sphere *billiard2) {
     glm::vec3 del = (billiard1->getPosition() - billiard2->getPosition());
     double distance = sqrtf(del.x * del.x + del.y * del.y + del.z * del.z);
