@@ -6,6 +6,8 @@
 #include "table_manager.h"
 #include "shader.h"
 #include "defs.h"
+#include "camera.h"
+#include "camera.h"
 #include "canvas.h"
 
 double max(double a, double b) {
@@ -292,6 +294,12 @@ bool TableManager::IfCollisionHole(Sphere *billiard, Hole *hole) {
     return false;
 }
 
+void TableManager::setCueBallVelocity(float time) {
+    glm::vec3 pos = Camera::getActiveCameras()["cue"]->getRelativePosition();
+    glm::vec3 dir = -glm::normalize(glm::vec3(pos.x, 0.0f, pos.z));
+    _billiards[0]->setVelocity(time * dir);
+}
+
 bool TableManager::IfCollisionBall(Sphere *billiard1, Sphere *billiard2) {
     glm::vec3 del = (billiard1->getPosition() - billiard2->getPosition());
     double distance = sqrtf(del.x * del.x + del.y * del.y + del.z * del.z);
@@ -414,6 +422,22 @@ void TableManager::EdgeBallCollision(Sphere *billiard, Edge *edge) {
         vz0 = -vz0;
     }
     billiard->setVelocity(glm::vec3(vx0, vy0, vz0));
+}
+
+bool TableManager::AllBallStatic()
+{
+    bool flag = true;
+    for(auto &b : _billiards)
+    {
+        if(b->getIfInHole()) continue;
+        glm::vec3 v = b->getVelocity();
+        if(sqrtf(dot(v, v)) > EPS)
+        {
+            flag = false;
+            break;
+        }
+    }
+    return flag;
 }
 
 TableManager::~TableManager() = default;

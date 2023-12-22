@@ -43,8 +43,6 @@ void Camera::setRotateCenter(glm::vec3 center) {
 }
 
 void Camera::dollyCamera(float dist) {
-    if (this->_name == "god") return;
-
     glm::vec3 tempPosition = _position;
     _position += _direction * dist;
     if (hasCollision()) {
@@ -54,8 +52,6 @@ void Camera::dollyCamera(float dist) {
 }
 
 void Camera::truckCamera(float dx, float dy) {
-    if (this->_name == "god") return;
-
     glm::vec3 tempPosition = _position;
     _position += _horizontal * dx + _up * dy;
     if (hasCollision()) {
@@ -76,14 +72,14 @@ void Camera::rotateCamera(float rx, float ry) {
     else if (angle - ry < 0.01f)
         ry = angle - 0.01f;
 
+    glm::mat4 trans_1 = glm::translate(glm::mat4(1.0f), -_rotate_center);
+    glm::mat4 trans_2 = glm::translate(glm::mat4(1.0f), _rotate_center);
     glm::mat4 rotMat = glm::rotate(glm::mat4(1.0f), rx, Y_UNIT_VECTOR)
                        * glm::rotate(glm::mat4(1.0f), ry, _horizontal);
-    glm::vec4 transformedPosition = rotMat * glm::vec4(_position.x - _rotate_center.x,
-                                                       _position.y - _rotate_center.y,
-                                                       _position.z - _rotate_center.z, 1.0f);
-    _position = glm::vec3(transformedPosition.x + _rotate_center.x,
-                          transformedPosition.y + _rotate_center.y,
-                          transformedPosition.z + _rotate_center.z);
+    glm::mat4 final_matrix = trans_2 * rotMat * trans_1;
+    glm::vec4 transformedPosition = final_matrix * glm::vec4(_position.x, _position.y, _position.z, 1.0f);
+    _position = glm::vec3(transformedPosition.x, transformedPosition.y, transformedPosition.z);
+
     glm::vec4 transformedDirection = rotMat * glm::vec4(_direction.x, _direction.y, _direction.z, 0.0f);
     _direction = glm::vec3(transformedDirection.x, transformedDirection.y, transformedDirection.z);
 
@@ -97,9 +93,11 @@ void Camera::rotateCamera(float rx, float ry) {
 }
 
 bool Camera::hasCollision() {
-    /* TODO: mk:judge whether has a collision or not
-     * Hint: using "_position"
-     */
+    if ((abs(_position.x) <= 1.0) && (_position.y <= 1.1 && _position.y >= 0.55) && (abs(_position.z) <= 1.7)
+        || ((abs(_position.x) <= 1.0) && (_position.y < 0.55) && (abs(_position.z) <= 1.5))
+        || _position.y <= 0.05) {
+        return true;
+    }
     return false;
 }
 

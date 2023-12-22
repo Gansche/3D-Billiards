@@ -329,17 +329,31 @@ Model::Model(const std::string &name, const char *filename, const char *director
     _program->unbind();
 
     if (_name == "stick") {
-        _model_matrix = glm::mat4(1.0f);
-        _model_matrix = glm::scale(_model_matrix, glm::vec3(0.025f, 0.025f, 0.025f));
-        _model_matrix = glm::rotate(_model_matrix, glm::radians(22.0f), glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f)));
-        _model_matrix = glm::rotate(_model_matrix, glm::radians(-35.5f), glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f)));
+        glm::mat4 matrix = glm::mat4(1.0f);
+        matrix = glm::translate(matrix, glm::vec3(0.0f, 0.0f, RADIUS));
+        matrix = glm::scale(matrix, glm::vec3(0.025f, 0.025f, 0.025f));
+        matrix = glm::translate(matrix, glm::vec3(0.0f, 0.0f, 28.25f));
+        matrix = glm::rotate(matrix, glm::radians(21.75f), glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f)));
+        matrix = glm::rotate(matrix, glm::radians(-35.5f), glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f)));
 
+        _model_matrix = glm::mat4(1.0f);
+        _model_matrix = matrix * _model_matrix;
     }
 }
 
 void Model::render() {
     _program->bind();
-    _program->setMat4("model", _model_matrix);
+    if (_name == "stick") {
+        glm::vec3 pos = Camera::getActiveCameras()["cue"]->getRelativePosition();
+        float angle = asin(pos.x / sqrt(pos.x * pos.x + pos.z * pos.z));
+        if (pos.z < 0) {
+            if (angle > 0)angle = glm::pi<float>() - angle;
+            else angle = -(angle + glm::pi<float>());
+        }
+        glm::mat4 rot_matrix = glm::rotate(glm::mat4(1.0f), angle, Y_UNIT_VECTOR);
+        glm::mat4 trans_matrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.95, 0.5));
+        _program->setMat4("model", trans_matrix * rot_matrix * _model_matrix);
+    } else _program->setMat4("model", _model_matrix);
     _program->setVec3("cameraPos", Camera::getCurrentCamera()->getPosition());
 
     for (auto &shape: _shapes) {

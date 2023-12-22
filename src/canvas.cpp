@@ -97,7 +97,6 @@ void Canvas::initialize(Game *game) {
         _game->update();
         _game->render();
 
-
         glfwSwapBuffers(window);
     }
     glfwTerminate();
@@ -106,11 +105,7 @@ void Canvas::initialize(Game *game) {
 void Canvas::key_callback(GLFWwindow *window, int key, int scancode, int action, int mode) {
     if (key == GLFW_KEY_ESCAPE && action == 1)
         glfwSetWindowShouldClose(window, 1);
-    else if (key == GLFW_KEY_CAPS_LOCK && action == 1) {
-        if (Camera::getCurrentCamera()->getName() == "god")Camera::use("cue");
-        else if (Camera::getCurrentCamera()->getName() == "cue")Camera::use("god");
-        Program::updateViewMatrix(Camera::getCurrentCamera()->getViewMatrix());
-    }
+    else _game->processKeyEvent(key, scancode, action, mode);
 }
 
 void Canvas::window_size_callback(GLFWwindow *window, int newWidth, int newHeight) {

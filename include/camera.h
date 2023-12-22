@@ -19,6 +19,8 @@ public:
 
     glm::mat4 getViewMatrix() { return _view_matrix; }
 
+    glm::vec3 getRelativePosition() { return _position - _rotate_center; }
+
     void setRotateCenter(glm::vec3 center);
 
     void dollyCamera(float dist);
@@ -32,6 +34,8 @@ public:
     static Camera *use(const std::string &name);
 
     static Camera *getCurrentCamera() { return _current_camera; }
+
+    static std::map<std::string, Camera *> getActiveCameras() { return _active_cameras; }
 
 private:
     glm::vec3 _direction;

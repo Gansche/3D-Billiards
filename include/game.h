@@ -5,7 +5,15 @@
 #ifndef BILLIARDS_GAME_H
 #define BILLIARDS_GAME_H
 
-//class StateControler;
+/* game state */
+const int START = 0x00;
+const int AIMING = 0x01;
+
+/* camera state */
+const int OPEN = 0x10;
+const int CUE = 0x11;
+const int GOD = 0x12;
+const int FREE = 0x13;
 
 class Scene;
 
@@ -27,8 +35,10 @@ public:
 
     ~Game();
 
+    static int _game_state;
+    static int _camera_state;
+
 private:
-//    StateControler *_state;
     Scene *_scene;
 };
 

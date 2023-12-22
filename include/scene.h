@@ -26,19 +26,15 @@ public:
 
     void render();
 
-    Camera *getCamera() const { return _camera; }
-
-//    TableManager *getTableManager() const { return _table_manager; }
-
-//    std::vector<Light *> getLights() { return _lights; }
+    TableManager *getTableManager() { return _table_manager; }
 
     ~Scene() = default;
 
 private:
-    Camera *_camera;
     TableManager *_table_manager;
-    Model * _table;
-    Model * _stick;
+    Model *_table;
+    Model *_stick;
+    Model *_room;
 };
 
 #endif //BILLIARDS_SCENE_H
