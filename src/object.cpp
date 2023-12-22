@@ -28,7 +28,10 @@ Object::Object(glm::vec3 position) : _position(position) {
     _angular_acceleration = glm::vec3(0.0f, 0.0f, 0.0f);
 }
 
-glm::vec3 Object::setPosition(glm::vec3 newPosition) { return _position = newPosition; }
+glm::vec3 Object::setPosition(glm::vec3 newPosition) {
+    return _position = newPosition;
+
+}
 
 double Object::setAcceleration(double newAcceleration) { return _acceleration = newAcceleration; }
 
@@ -54,7 +57,9 @@ std::vector<Vertex> Sphere::_vertices{};
 std::vector<unsigned int> Sphere::_indices{};
 
 
-Sphere::Sphere(std::string name, glm::vec3 position) : Object(position), _name(std::move(name)) {
+Sphere::Sphere(std::string name, glm::vec3 position) : Object(position) {
+    _name = std::move(name);
+
     _model_matrix = glm::mat4(1.0f);
     _model_matrix = glm::translate(_model_matrix, _position);
 
@@ -235,17 +240,20 @@ void Sphere::initialize(Program *program) {
 
 /* mesh */
 
-Model::Model(const char *filename, const char *directory, Program *program) : _program(program) {
+Model::Model(const std::string &name, const char *filename, const char *directory, Program *program) : _program(
+        program) {
+    _name = name;
+
     std::string _filename(filename);
     std::string _directory(directory);
-    std::string name = _directory + _filename;
+    std::string rout = _directory + _filename;
 
     tinyobj::attrib_t attrib;
     std::vector<tinyobj::shape_t> shapes;
     std::vector<tinyobj::material_t> materials;
     std::string warn;
     std::string err;
-    bool ok = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, name.c_str(), directory);
+    bool ok = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, rout.c_str(), directory);
     if (!warn.empty())std::cout << warn << std::endl;
     if (!err.empty())std::cout << err << std::endl;
     if (!ok)exit(0);
@@ -319,6 +327,14 @@ Model::Model(const char *filename, const char *directory, Program *program) : _p
     _program->setInt("roughness_texture", 3);
 
     _program->unbind();
+
+    if (_name == "stick") {
+        _model_matrix = glm::mat4(1.0f);
+        _model_matrix = glm::scale(_model_matrix, glm::vec3(0.025f, 0.025f, 0.025f));
+        _model_matrix = glm::rotate(_model_matrix, glm::radians(22.0f), glm::normalize(glm::vec3(0.0f, 1.0f, 0.0f)));
+        _model_matrix = glm::rotate(_model_matrix, glm::radians(-35.5f), glm::normalize(glm::vec3(1.0f, 0.0f, 0.0f)));
+
+    }
 }
 
 void Model::render() {

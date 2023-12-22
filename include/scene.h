@@ -37,8 +37,8 @@ public:
 private:
     Camera *_camera;
     TableManager *_table_manager;
-    Model * _mesh;
-    Model * _mesh2;
+    Model * _table;
+    Model * _stick;
 };
 
 #endif //BILLIARDS_SCENE_H

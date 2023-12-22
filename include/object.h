@@ -67,6 +67,8 @@ public:
     virtual ~Object();
 
 protected:
+    std::string _name;
+
     glm::vec3 _position;
     glm::vec3 _velocity;
     double _angular_velocity;
@@ -99,7 +101,6 @@ public:
 
 private:
     bool if_in_hole;
-    std::string _name;
 
     glm::mat4 _model_matrix;
 
@@ -119,7 +120,7 @@ private:
 
 class Model : public Object {
 public:
-    Model(const char *filename, const char *directory, Program *program);
+    Model(const std::string& name, const char *filename, const char *directory, Program *program);
 
     void render();
 

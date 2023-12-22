@@ -25,8 +25,9 @@ void TableManager::Init() {
     double a = ACCLAR;
     Sphere *newSphere;
 
-    newSphere = new Sphere("cue", glm::vec3(0.0f, 0.95, 0.5));
-    newSphere->setVelocity(glm::vec3(0, 0, -3));
+    newSphere = new Sphere("cue", glm::vec3(0.0, 0.95, 0.5));
+//    newSphere = new Sphere("cue", glm::vec3(0.0, 0.0, 0.0));
+    newSphere->setVelocity(glm::vec3(0, 0, 0));
     newSphere->setAcceleration(a);
     newSphere->setAngularVelocity(0.0);
     newSphere->setAngle(0.0);

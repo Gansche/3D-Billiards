@@ -28,7 +28,9 @@ void Scene::generate() {
     phongLighting_shaders.push_back(phongLighting_fragment_shader);
     Program *phongLighting_shade_program = new Program(phongLighting_shaders);
 
-    _camera = new Camera(glm::vec3(3, 3, 3), glm::vec3(-1, -1, -1));
+    _camera = new Camera("cue", glm::vec3(3, 3, 3), glm::vec3(-1, -1, -1), glm::vec3(0.0, 0.95, 0.5));
+    _camera = new Camera("god", glm::vec3(0, 3, 0), glm::vec3(0, -1, 0));
+
     Program::updateViewMatrix(Camera::getCurrentCamera()->getViewMatrix());
 
     Light *light = new Light(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(5.0f, 5.0f, 5.0f));
@@ -36,8 +38,9 @@ void Scene::generate() {
     Sphere::initialize(billiard_shade_program);
     _table_manager = new TableManager();
 
-    _mesh = new Model("LuxuryPoolTable.obj", "resources/models/table/", phongLighting_shade_program);
-//    _mesh2 = new Model("uploads_files_3798056_disco.obj", "resources/models/room/", phongLighting_shade_program);
+    _table = new Model("table", "LuxuryPoolTable.obj", R"(resources\models\table\)", phongLighting_shade_program);
+    _stick = new Model("stick", "CueStick.obj", R"(resources\models\stick\)", billiard_shade_program);
+
 }
 
 void Scene::update() {
@@ -46,6 +49,6 @@ void Scene::update() {
 
 void Scene::render() {
     _table_manager->render();
-    _mesh->render();
-//    _mesh2->render();
+    _table->render();
+    _stick->render();
 }
