@@ -303,17 +303,25 @@ Model::Model(const std::string &name, const char *filename, const char *director
 
     _model_matrix = glm::mat4(1.0f);
 
-    _diffuse_texture = new Texture("resources/models/table/LuxuryPoolTable_Diffuse_Map.png");
-    _diffuse_texture->generate();
-
-    _metalness_texture = new Texture("resources/models/table/LuxuryPoolTable_Metalness_Map.png");
-    _metalness_texture->generate();
-
-    _normal_texture = new Texture("resources/models/table/LuxuryPoolTable_Normal_Map.png");
-    _normal_texture->generate();
-
-    _roughness_texture = new Texture("resources/models/table/LuxuryPoolTable_Roughness_Map.png");
-    _roughness_texture->generate();
+    if (_name == "stick") {
+        _diffuse_texture = new Texture("resources/models/stick/CueStickAlbedo.png");
+        _diffuse_texture->generate();
+        _metalness_texture = new Texture("resources/models/stick/CueStickMetal.png");
+        _metalness_texture->generate();
+        _normal_texture = new Texture("resources/models/stick/CueStickNormal.png");
+        _normal_texture->generate();
+        _roughness_texture = new Texture("resources/models/stick/CueStickRough.png");
+        _roughness_texture->generate();
+    } else {
+        _diffuse_texture = new Texture("resources/models/table/LuxuryPoolTable_Diffuse_Map.png");
+        _diffuse_texture->generate();
+        _metalness_texture = new Texture("resources/models/table/LuxuryPoolTable_Metalness_Map.png");
+        _metalness_texture->generate();
+        _normal_texture = new Texture("resources/models/table/LuxuryPoolTable_Normal_Map.png");
+        _normal_texture->generate();
+        _roughness_texture = new Texture("resources/models/table/LuxuryPoolTable_Roughness_Map.png");
+        _roughness_texture->generate();
+    }
 
     std::vector<Light *> lights = Light::getLights();
 

@@ -40,7 +40,7 @@ void Scene::generate() {
     _table_manager = new TableManager();
 
     _table = new Model("table", "LuxuryPoolTable.obj", R"(resources\models\table\)", phongLighting_shade_program);
-    _stick = new Model("stick", "CueStick.obj", R"(resources\models\stick\)", billiard_shade_program);
+    _stick = new Model("stick", "CueStick.obj", R"(resources\models\stick\)", phongLighting_shade_program);
 //    _room =  new Model("room", "disco.obj", R"(resources\models\room\)", billiard_shade_program);
 }
 
