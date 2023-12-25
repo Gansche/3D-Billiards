@@ -347,6 +347,12 @@ Model::Model(const std::string &name, const char *filename, const char *director
         _model_matrix = glm::mat4(1.0f);
         _model_matrix = matrix * _model_matrix;
     }
+
+    if (_name == "room") {
+        glm::mat4 matrix = _model_matrix;
+        matrix = glm::translate(matrix, glm::vec3(7.0f, -2.55f, 9.0f));
+        _model_matrix = matrix;
+    }
 }
 
 void Model::render() {

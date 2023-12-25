@@ -101,7 +101,10 @@ void Camera::rotateCamera(float rx, float ry) {
 bool Camera::hasCollision() {
     if ((abs(_position.x) <= 1.0) && (_position.y <= 1.1 && _position.y >= 0.55) && (abs(_position.z) <= 1.7)
         || ((abs(_position.x) <= 1.0) && (_position.y < 0.55) && (abs(_position.z) <= 1.5))
-        || _position.y <= 0.05) {
+        || _position.y <= 0.2
+        || abs(_position.y) >= 7
+        || sqrtf(_position.x * _position.x + _position.z * _position.z) >= 7
+            ) {
         return true;
     }
     return false;
