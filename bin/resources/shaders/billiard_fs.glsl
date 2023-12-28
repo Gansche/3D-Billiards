@@ -15,17 +15,17 @@ uniform sampler2D diffuse_texture;
 void main()
 {
     // ambient
-    float ambientStrength = 0.01;
+    float ambientStrength = 0.02;
     vec3 ambient = ambientStrength * lightColor;
 
     // diffuse
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor * 0.08;
+    vec3 diffuse = diff * lightColor * 0.05;
 
     // specular
-    float specularStrength = 5;
+    float specularStrength = 4;
     vec3 viewDir = normalize(cameraPos - FragPos);
     vec3 reflectDir = reflect(-lightDir, norm);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);

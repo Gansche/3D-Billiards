@@ -76,8 +76,7 @@ void Game::processKeyEvent(int key, int scancode, int action, int mode) {
                 Program::updateViewMatrix(Camera::getCurrentCamera()->getViewMatrix());
             } else if (key == GLFW_KEY_SPACE && action == 1) {
                 //TODO
-                _scene->getTableManager()->setCueBallVelocity(5.0f);
-                //TODO!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
+                _scene->getTableManager()->setCueBallVelocity(-0.5 * Game::_back);
                 _game_state = GOING;
             }
             break;
@@ -129,7 +128,7 @@ void Game::processScrollEvent(double xoffset, double yoffset) {
     switch (_game_state) {
         case AIMING: {
             if (yoffset == -1.0f) {
-                if (_back > -20.0f)_back += yoffset;
+                if (_back > -10.0f)_back += yoffset;
             } else if (yoffset == 1.0f) {
                 if (_back < 0.0f)_back += yoffset;
             }
