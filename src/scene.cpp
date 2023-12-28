@@ -41,7 +41,6 @@ void Scene::generate() {
 
     _table = new Model("table", "LuxuryPoolTable.obj", R"(resources\models\table\)", phongLighting_shade_program);
     _stick = new Model("stick", "CueStick.obj", R"(resources\models\stick\)", phongLighting_shade_program);
-//    _room =  new Model("room", "disco.obj", R"(resources\models\room\)", billiard_shade_program);
 }
 
 void Scene::update() {
@@ -51,7 +50,6 @@ void Scene::update() {
 void Scene::render() {
     _table_manager->render();
     _table->render();
-//    _room->render();
     if (Game::_game_state == AIMING || Game::_game_state == HITTING) {
         _stick->render();
     }

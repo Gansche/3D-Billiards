@@ -248,25 +248,20 @@ Model::Model(const std::string &name, const char *filename, const char *director
     std::string _directory(directory);
     std::string rout = _directory + _filename;
 
-    tinyobj::attrib_t attrib;
-    std::vector<tinyobj::shape_t> shapes;
-    std::vector<tinyobj::material_t> materials;
-    std::string warn;
-    std::string err;
-    bool ok = tinyobj::LoadObj(&attrib, &shapes, &materials, &warn, &err, rout.c_str(), directory);
-    if (!warn.empty())std::cout << warn << std::endl;
-    if (!err.empty())std::cout << err << std::endl;
+    attrib_t attrib;
+    std::vector<shape_t> shapes;
+    bool ok = LoadObj(&attrib, &shapes, rout.c_str());
     if (!ok)exit(0);
 
 
     std::vector<Vertex> _vertices;
 
-    std::vector<tinyobj::real_t> vertices = attrib.vertices;
-    std::vector<tinyobj::real_t> normals = attrib.normals;
-    std::vector<tinyobj::real_t> texcoords = attrib.texcoords;
+    std::vector<real_t> vertices = attrib.vertices;
+    std::vector<real_t> normals = attrib.normals;
+    std::vector<real_t> texcoords = attrib.texcoords;
 
     for (auto &shapePtr: shapes) {
-        std::vector<tinyobj::index_t> indices = shapePtr.mesh.indices;
+        std::vector<index_t> indices = shapePtr.mesh.indices;
         for (auto &index: indices) {
             Vertex vertex;
             vertex.v = glm::vec3(vertices[3 * index.vertex_index], vertices[3 * index.vertex_index + 1],
