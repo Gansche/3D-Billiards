@@ -15,14 +15,14 @@ uniform sampler2D diffuse_texture;
 void main()
 {
     // ambient
-    float ambientStrength = 0.1;
+    float ambientStrength = 0.01;
     vec3 ambient = ambientStrength * lightColor;
 
     // diffuse
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor * 0.1;
+    vec3 diffuse = diff * lightColor * 0.08;
 
     // specular
     float specularStrength = 5;

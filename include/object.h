@@ -97,6 +97,8 @@ public:
 
     void update(double time);
 
+    void generateModelMatrix();
+
     ~Sphere() = default;
 
 private:

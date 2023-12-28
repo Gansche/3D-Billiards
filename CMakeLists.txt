@@ -18,5 +18,5 @@ file(COPY resources DESTINATION ${CMAKE_SOURCE_DIR}/bin)
 #add_executable(Billiards ${SRC})
 add_executable(Billiards src/canvas.cpp src/game.cpp src/glad.c src/light.cpp
         src/main.cpp src/object.cpp src/scene.cpp src/shader.cpp src/stb_image.cpp
-        src/table_manager.cpp src/texture.cpp src/camera.cpp src/program.cpp include/program.h include/tiny_obj_loader.h src/material.cpp include/material.h src/obj_loader.cpp include/obj_loader.h)
+        src/table_manager.cpp src/texture.cpp src/camera.cpp src/program.cpp include/program.h include/obj_loader.h src/material.cpp include/material.h src/obj_loader.cpp)
 target_link_libraries(Billiards glfw3.dll opengl32.lib) # opengl32.dll may be useless

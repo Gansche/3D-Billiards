@@ -300,7 +300,7 @@ void TableManager::setCueBallVelocity(float time) {
     _billiards[0]->setVelocity(time * dir);
 }
 
-glm::vec3 TableManager::getCueBallPosition(){
+glm::vec3 TableManager::getCueBallPosition() {
     return _billiards[0]->getPosition();
 }
 
@@ -428,17 +428,25 @@ void TableManager::EdgeBallCollision(Sphere *billiard, Edge *edge) {
     billiard->setVelocity(glm::vec3(vx0, vy0, vz0));
 }
 
-bool TableManager::AllBallStatic()
-{
+bool TableManager::AllBallStatic() {
     bool flag = true;
-    for(auto &b : _billiards)
-    {
-        if(b->getIfInHole()) continue;
+    for (auto &b: _billiards) {
+        if (b->getIfInHole()) continue;
         glm::vec3 v = b->getVelocity();
-        if(sqrtf(dot(v, v)) > EPS)
-        {
+        if (sqrtf(dot(v, v)) > EPS) {
             flag = false;
             break;
+        }
+    }
+    if (flag) {
+        for (auto &b: _billiards) {
+            if (b->getName() == "cue" && b->getIfInHole()) {
+                b->setPosition(glm::vec3(0.0, 0.95, 0.5));
+                b->setVelocity(glm::vec3(0.0f, 0.0f, 0.0f));
+                b->generateModelMatrix();
+                b->setIfInHole(false);
+                break;
+            }
         }
     }
     return flag;

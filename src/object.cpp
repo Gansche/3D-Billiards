@@ -10,7 +10,7 @@
 #include "defs.h"
 #include "camera.h"
 #include "light.h"
-#include "tiny_obj_loader.h"
+#include "obj_loader.h"
 
 /* object */
 Object::Object() {
@@ -136,6 +136,11 @@ void Sphere::update(double t) {
     _model_matrix = translate_mat * rotate_mat;
 }
 
+void Sphere::generateModelMatrix() {
+    glm::mat4 translate_mat = glm::translate(glm::mat4(1.0f), getPosition());
+    _model_matrix = translate_mat;
+}
+
 bool Sphere::setIfInHole(bool flag) { return if_in_hole = flag; }
 
 std::string Sphere::setName(std::string newName) { return _name = newName; }
@@ -248,53 +253,51 @@ Model::Model(const std::string &name, const char *filename, const char *director
     std::string _directory(directory);
     std::string rout = _directory + _filename;
 
-    attrib_t attrib;
-    std::vector<shape_t> shapes;
-    bool ok = LoadObj(&attrib, &shapes, rout.c_str());
+    Vertices attrib;
+    Mesh mesh;
+    bool ok = load(&attrib, &mesh, rout.c_str());
     if (!ok)exit(0);
-
 
     std::vector<Vertex> _vertices;
 
-    std::vector<real_t> vertices = attrib.vertices;
-    std::vector<real_t> normals = attrib.normals;
-    std::vector<real_t> texcoords = attrib.texcoords;
+    std::vector<float> vertices = attrib.vertices;
+    std::vector<float> normals = attrib.normals;
+    std::vector<float> texcoords = attrib.texcoords;
 
-    for (auto &shapePtr: shapes) {
-        std::vector<index_t> indices = shapePtr.mesh.indices;
-        for (auto &index: indices) {
-            Vertex vertex;
-            vertex.v = glm::vec3(vertices[3 * index.vertex_index], vertices[3 * index.vertex_index + 1],
-                                 vertices[3 * index.vertex_index + 2]);
-            vertex.n = glm::vec3(normals[3 * index.normal_index], normals[3 * index.normal_index + 1],
-                                 normals[3 * index.normal_index + 2]);
-            vertex.c = glm::vec3(0.529, 0.808, 0.922);
-            vertex.u = glm::vec2(texcoords[2 * index.texcoord_index], texcoords[2 * index.texcoord_index + 1]);
-            _vertices.push_back(vertex);
-        }
-
-        Shape *shape = new Shape;
-
-        glGenVertexArrays(1, &shape->VAO);
-        glBindVertexArray(shape->VAO);
-
-        glGenBuffers(1, &shape->VBO);
-        glBindBuffer(GL_ARRAY_BUFFER, shape->VBO);
-        glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) 0);
-        glEnableVertexAttribArray(0);
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              (void *) reinterpret_cast<void *>(offsetof(Vertex, n)));
-        glEnableVertexAttribArray(1);
-        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
-                              (void *) reinterpret_cast<void *>(offsetof(Vertex, u)));
-        glEnableVertexAttribArray(2);
-
-        shape->count = _vertices.size();
-        _shapes.push_back(shape);
-        _vertices.clear();
+    std::vector<Index> indices = mesh.indices;
+    for (auto &index: indices) {
+        Vertex vertex;
+        vertex.v = glm::vec3(vertices[3 * index.vi], vertices[3 * index.vi + 1],
+                             vertices[3 * index.vi + 2]);
+        vertex.n = glm::vec3(normals[3 * index.vn], normals[3 * index.vn + 1],
+                             normals[3 * index.vn + 2]);
+        vertex.c = glm::vec3(0.529, 0.808, 0.922);
+        vertex.u = glm::vec2(texcoords[2 * index.vt], texcoords[2 * index.vt + 1]);
+        _vertices.push_back(vertex);
     }
+
+    Shape *shape = new Shape;
+
+    glGenVertexArrays(1, &shape->VAO);
+    glBindVertexArray(shape->VAO);
+
+    glGenBuffers(1, &shape->VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, shape->VBO);
+    glBufferData(GL_ARRAY_BUFFER, _vertices.size() * sizeof(Vertex), &_vertices[0], GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) 0);
+    glEnableVertexAttribArray(0);
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) reinterpret_cast<void *>(offsetof(Vertex, n)));
+    glEnableVertexAttribArray(1);
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) reinterpret_cast<void *>(offsetof(Vertex, u)));
+    glEnableVertexAttribArray(2);
+
+    shape->count = _vertices.size();
+    _shapes.push_back(shape);
+    _vertices.clear();
+
 
     _model_matrix = glm::mat4(1.0f);
 
