@@ -14,8 +14,6 @@
 #define FoV 45.0f
 
 #define IS_SPACE(x) (((x) == ' ') || ((x) == '\t'))
-#define IS_DIGIT(x) \
-  (static_cast<unsigned int>((x) - '0') < static_cast<unsigned int>(10))
 #define IS_NEW_LINE(x) (((x) == '\r') || ((x) == '\n') || ((x) == '\0'))
 
 #endif //BILLIARDS_DEFS_H

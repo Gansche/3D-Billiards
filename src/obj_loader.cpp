@@ -22,9 +22,9 @@ bool fixIndex(int idx, int n, int *ret, bool allow_zero) {
         return allow_zero;
     }
     if (idx < 0) {
-        (*ret) = n + idx;  // negative value = relative
+        (*ret) = n + idx;
         if ((*ret) < 0) {
-            return false;  // invalid relative index
+            return false;
         }
         return true;
     }
@@ -52,7 +52,6 @@ bool parseTriple(const char **token, int vsize, int vnsize, int vtsize,
         return true;
     }
     (*token)++;
-    // i//k
     if ((*token)[0] == '/') {
         (*token)++;
         if (!fixIndex(atoi((*token)), vnsize, &vi.vn, true)) {
@@ -62,7 +61,6 @@ bool parseTriple(const char **token, int vsize, int vnsize, int vtsize,
         (*ret) = vi;
         return true;
     }
-    // i/j/k or i/j
     if (!fixIndex(atoi((*token)), vtsize, &vi.vt, true)) {
         return false;
     }
@@ -71,8 +69,7 @@ bool parseTriple(const char **token, int vsize, int vnsize, int vtsize,
         (*ret) = vi;
         return true;
     }
-    // i/j/k
-    (*token)++;  // skip '/'
+    (*token)++;
     if (!fixIndex(atoi((*token)), vnsize, &vi.vn, true)) {
         return false;
     }
@@ -87,10 +84,8 @@ bool load(Vertices *vertices, Mesh *mesh, const char *filename) {
 
     std::string line;
     while (std::getline(ifs, line)) {
-        // Skip if empty line.
         if (line.empty()) continue;
 
-        // Trim newline '\r\n' or '\n'
         if (!line.empty()) {
             if (line[line.size() - 1] == '\n')
                 line.erase(line.size() - 1);
@@ -100,16 +95,13 @@ bool load(Vertices *vertices, Mesh *mesh, const char *filename) {
                 line.erase(line.size() - 1);
         }
 
-        // Skip leading space.
         const char *token = line.c_str();
         token += strspn(token, " \t");
 
         assert(token);
-        if (token[0] == '\0') continue;  // empty line
+        if (token[0] == '\0') continue;
+        if (token[0] == '#') continue;
 
-        if (token[0] == '#') continue;  // comment line
-
-        // vertex
         if (token[0] == 'v' && IS_SPACE((token[1]))) {
             token += 2;
             float x, y, z;
@@ -121,7 +113,6 @@ bool load(Vertices *vertices, Mesh *mesh, const char *filename) {
             vertices->vertices.push_back(z);
             continue;
         }
-        // normal
         if (token[0] == 'v' && token[1] == 'n' && IS_SPACE((token[2]))) {
             token += 3;
             float x, y, z;
@@ -133,7 +124,6 @@ bool load(Vertices *vertices, Mesh *mesh, const char *filename) {
             vertices->normals.push_back(z);
             continue;
         }
-        // texcoord
         if (token[0] == 'v' && token[1] == 't' && IS_SPACE((token[2]))) {
             token += 3;
             float x, y;
@@ -143,13 +133,11 @@ bool load(Vertices *vertices, Mesh *mesh, const char *filename) {
             vertices->texcoords.push_back(y);
             continue;
         }
-        // face
         if (token[0] == 'f' && IS_SPACE((token[1]))) {
             token += 2;
             token += strspn(token, " \t");
 
             Mesh face;
-
             while (!IS_NEW_LINE(token[0])) {
                 Index vi;
                 parseTriple(&token, static_cast<int>(vertices->vertices.size() / 3),

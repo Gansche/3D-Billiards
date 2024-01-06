@@ -45,8 +45,6 @@ void Game::update() {
             break;
         }
     }
-
-
 }
 
 void Game::render() {
