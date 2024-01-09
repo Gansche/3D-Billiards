@@ -7,7 +7,6 @@
 #include "shader.h"
 #include "defs.h"
 #include "camera.h"
-#include "camera.h"
 #include "canvas.h"
 
 double max(double a, double b) {
@@ -288,7 +287,7 @@ void TableManager::UpdateTable() {
 
 bool TableManager::IfCollisionHole(Sphere *billiard, Hole *hole) {
     glm::vec3 del = billiard->getPosition() - hole->getPosition();
-    double distance = sqrtf(del.x * del.x + del.y * del.y + del.z * del.z);
+    double distance = del.length();
     if (distance < hole->getRadius())
         return true;
     return false;
